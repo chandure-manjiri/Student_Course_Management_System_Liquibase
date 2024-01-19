@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/create-student-course.xml
+  - include:
+      file: db/changelog/insert-data-courses.xml
+  - include:
+      file: db/changelog/insert-data-student-course.xml
+  - include:
+      file: db/changelog/insert-data-students.xml

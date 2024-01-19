@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="ADD ID AS SERIAL IN STUDNETS AND COURSES TABLES" author="manjiri">
+        <createTable tableName="students"
+                     remarks="A table to contain all students">
+            <column name="id" type="SERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="firstname" type="varchar(100)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="lastname" type="varchar(100)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="gender" type="varchar(100)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="age" type="int">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="phonenumber" type="varchar(15)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="courses"
+                     remarks="A table to contain all the courses">
+            <column name="id" type="SERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="students_courses"
+                     remarks="A table to contain all the student and respective courses">
+            <column name="sid" type="int" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="cid" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+</databaseChangeLog>

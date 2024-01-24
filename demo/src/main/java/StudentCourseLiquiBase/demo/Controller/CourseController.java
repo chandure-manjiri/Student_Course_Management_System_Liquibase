@@ -18,7 +18,7 @@ import java.util.Set;
 
 
 @RestController
-@RequestMapping("/students_Courses")
+@RequestMapping("/students-Courses")
 public class CourseController {
 
     @Autowired
@@ -49,7 +49,7 @@ public class CourseController {
 
     }
 
-    @GetMapping("/courses/getstudents/{id}")
+    @GetMapping("/courses/students/{id}")
     public ResponseEntity<Set<Student>> getStudentsByCourseId(@PathVariable(name = "id") Integer id) throws ResourceNotFoundException {
 
         Course course = this.courseRepository.findById(id)

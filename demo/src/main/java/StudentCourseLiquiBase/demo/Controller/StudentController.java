@@ -16,7 +16,7 @@ import java.util.*;
 
 
 @RestController
-@RequestMapping("/students_Courses")
+@RequestMapping("/students-Courses")
 public class StudentController {
 
     @Autowired
@@ -99,8 +99,8 @@ public class StudentController {
         return  respoce;
     }
 
-    @PostMapping("/students/{stud_id}/assign_course/{cour_id}")
-    public ResponseEntity<Student> AssignCourseToStudent(@PathVariable(name = "stud_id") Integer stu_id, @PathVariable(name = "cour_id") Integer cour_id) throws ResourceNotFoundException {
+    @PutMapping("/students/{sid}/course/{cid}")
+    public ResponseEntity<Student> AssignCourseToStudent(@PathVariable(name = "sid") Integer stu_id, @PathVariable(name = "cid") Integer cour_id) throws ResourceNotFoundException {
         Student student1 = this.studentRepository.findById(stu_id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + stu_id));
 
@@ -113,7 +113,7 @@ public class StudentController {
 
     }
 
-    @PostMapping("/students/{stud_id}/remove_course/{cour_id}")
+    @PutMapping("/students/{stud_id}/course/{cour_id}")
     public ResponseEntity<Student> RemoveCourseToStudent(@PathVariable(name = "stud_id") Integer stu_id, @PathVariable(name = "cour_id") Integer cour_id) throws ResourceNotFoundException {
         Student student1 = this.studentRepository.findById(stu_id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + stu_id));

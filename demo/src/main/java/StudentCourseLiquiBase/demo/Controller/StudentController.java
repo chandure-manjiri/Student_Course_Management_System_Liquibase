@@ -90,6 +90,8 @@ public class StudentController {
         Student student1 = this.studentRepository.findById(stu_id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + stu_id));
 
+        Student student1 = this.studentRepository.findById(stu_id)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + stu_id));
         StudentDTO studentDTO = this.studentServices.assignCourseToStudent(stu_id, cour_id);
         return ResponseEntity.ok().body(studentDTO);
 

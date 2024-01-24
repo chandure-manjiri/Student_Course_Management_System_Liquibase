@@ -12,10 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import java.util.*;
 
 
 @RestController
@@ -54,9 +51,20 @@ public class StudentController {
 
     //add new student
     @PostMapping("/students")
-    public ResponseEntity<Student> createStudent(@RequestBody Student student){
-        Student student1 = this.studentRepository.save(student);
+    public ResponseEntity<Student> createStudent(@RequestBody Student student) throws ResourceNotFoundException{
+        Student student1 = student;
+        Set<Course> tempcourselist = student.getCourse();
+        Set<Course> tempcourselist2 = new HashSet<>();
+        student1.setCourse(tempcourselist2);
+        for(Course tempcourse : tempcourselist){
+            int cid = tempcourse.getId();
+            System.out.println("cid:"+cid);
+            Course validcourse = this.courseRepository.findById(cid).orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + cid));
+            student1.getCourse().add(validcourse);
+        }
+        this.studentRepository.save(student1);
         return new ResponseEntity<>(student1, HttpStatus.CREATED);
+
     }
 
 
@@ -75,6 +83,7 @@ public class StudentController {
         student1.setCourse(student.getCourse());
 
         return ResponseEntity.ok(this.studentRepository.save(student1));
+
 
     }
 

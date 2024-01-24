@@ -21,7 +21,7 @@ public class Course {
     private String Name;
 
 
-    @ManyToMany(mappedBy = "course")
+    @ManyToMany(mappedBy = "course", fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<Student> student;
 

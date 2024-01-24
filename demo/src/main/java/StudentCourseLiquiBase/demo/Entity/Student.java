@@ -26,7 +26,7 @@ public class Student {
     @Column(name = "phonenumber",nullable = true, length = 10, unique = true)
     private String phone;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "students_courses",
         joinColumns = @JoinColumn(name = "sid"),
         inverseJoinColumns = @JoinColumn(name = "cid"))

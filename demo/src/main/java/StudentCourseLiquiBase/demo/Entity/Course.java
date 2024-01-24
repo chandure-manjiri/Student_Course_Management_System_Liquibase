@@ -20,8 +20,6 @@ public class Course {
     @Column(name = "name",nullable = false, unique = true)
     private String Name;
 
-
-
     @ManyToMany(mappedBy = "course", fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<Student> student;

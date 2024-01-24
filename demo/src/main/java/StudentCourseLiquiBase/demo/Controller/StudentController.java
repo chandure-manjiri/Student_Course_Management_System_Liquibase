@@ -59,6 +59,7 @@ public class StudentController {
     public ResponseEntity<StudentDTO> createStudent(@Valid @RequestBody StudentCreationDTO student) throws ResourceNotFoundException{
          StudentDTO studentDTO = studentServices.createStudent(student);
         return new ResponseEntity<>(studentDTO, HttpStatus.CREATED);
+
     }
 
     //update student

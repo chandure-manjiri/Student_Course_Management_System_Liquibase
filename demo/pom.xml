@@ -56,6 +56,7 @@
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>2.3.0</version>
 		</dependency>
+<<<<<<< HEAD
 
 
 		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
@@ -68,12 +69,22 @@
 		<!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
 		<!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
 
+=======
+>>>>>>> 1675601 (5th conflit solve while rebasing of feature/mapstruct with 4th conflict solve while rebasing with dto-validations)
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
 			<version>1.5.5.Final</version>
 		</dependency>
+<<<<<<< HEAD
 
+=======
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+>>>>>>> 1675601 (5th conflit solve while rebasing of feature/mapstruct with 4th conflict solve while rebasing with dto-validations)
 
 	</dependencies>
 

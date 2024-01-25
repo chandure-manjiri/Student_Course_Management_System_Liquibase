@@ -8,6 +8,10 @@ import StudentCourseLiquiBase.demo.MapStruct.StudentMapper;
 import StudentCourseLiquiBase.demo.Repository.CourseRepository;
 import StudentCourseLiquiBase.demo.Repository.StudentRepository;
 import StudentCourseLiquiBase.demo.exception.CourseExistsException;
+import StudentCourseLiquiBase.demo.Dto.AllCourseDTO;
+import StudentCourseLiquiBase.demo.Dto.CourseCreationDTO;
+import StudentCourseLiquiBase.demo.Dto.CourseDTO;
+import StudentCourseLiquiBase.demo.Dto.StudentDTO;
 import StudentCourseLiquiBase.demo.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +22,7 @@ import java.util.Set;
 
 @Service
 public class CourseServices {
+
     private StudentMapper studentMapper;
 
     private CourseMapper courseMapper;
@@ -30,6 +35,7 @@ public class CourseServices {
     public void CourseMapperService(CourseMapper courseMapper){
         this.courseMapper = courseMapper;
     }
+
     @Autowired
     private StudentRepository studentRepository;
 
@@ -47,6 +53,12 @@ public class CourseServices {
         return convertToADTO(course);
     }
 
+    private AllCourseDTO convertToADTO(Course course) {
+        return courseMapper.convertToADTO(course);
+    }
+
+
+
     public Set<StudentNameDto> getAllStudents(Integer id) throws ResourceNotFoundException{
             Course course = this.courseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Course not found this UUID ::" + id));
 
@@ -59,12 +71,11 @@ public class CourseServices {
     }
 
     public CourseDTO createCourse(CourseCreationDTO courseCreationDTO){
+              Course course = convertToEntityCreation(courseCreationDTO);
 
-             Course course = convertToEntityCreation(courseCreationDTO);
-              Course course1 = this.courseRepository.save(course);
-             return convertToDTO(course1);
+              this.courseRepository.save(course);
+             return convertToDTO(course);
     }
-
 
 
     public void deleteCourse(Integer id) throws ResourceNotFoundException{
@@ -75,9 +86,7 @@ public class CourseServices {
     public AllCourseDTO updateCourse(CourseCreationDTO courseCreationDTO, Integer id) throws ResourceNotFoundException{
         Course course = this.courseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Course not found this UUID ::" + id));
         this.courseMapper.updateEntity(courseCreationDTO, course);
-      //  course = course1;
         this.courseRepository.save(course);
-
         return convertToADTO(course);
     }
 
@@ -106,36 +115,16 @@ public class CourseServices {
         return  studentNameDto;
     }
 
-    public Course convertToEntity(CourseDTO courseDTO){
-        Course course = courseMapper.convertToEntity(courseDTO);
-        return course;
-    }
-    public AllCourseDTO convertToADTO(Course course){
-          AllCourseDTO  courseDTO = courseMapper.convertToADTO(course);
-        Set<StudentNameDto> studentDTOSet = new HashSet<>();
-        for(Student student : course.getStudent()){
-            StudentNameDto studentNameDto = convertToStudentNameDto(student);
-            studentDTOSet.add(studentNameDto);
-        }
-        courseDTO.setStudentName(studentDTOSet);
 
-          return  courseDTO;
 
-    }
     public CourseDTO convertToDTO(Course course) {
-
         CourseDTO courseDTO = courseMapper.convertToDTO(course);
         return courseDTO;
     }
 
-    public StudentDTO convertToSDTO(Student student){
+    public StudentDTO convertToSDTO(Student student) {
 
-        StudentDTO studentDTO =  studentMapper.convertToDTO(student);
+        StudentDTO studentDTO = studentMapper.convertToDTO(student);
         return studentDTO;
-
     }
-
-
-
-
 }

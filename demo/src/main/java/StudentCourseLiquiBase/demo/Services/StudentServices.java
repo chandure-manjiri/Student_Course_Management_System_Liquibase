@@ -3,6 +3,7 @@ package StudentCourseLiquiBase.demo.Services;
 import StudentCourseLiquiBase.demo.Dto.CourseDTO;
 import StudentCourseLiquiBase.demo.Dto.StudentCreationDTO;
 import StudentCourseLiquiBase.demo.Dto.StudentDTO;
+
 import StudentCourseLiquiBase.demo.Dto.StudentUpdateDTO;
 import StudentCourseLiquiBase.demo.Entity.Course;
 import StudentCourseLiquiBase.demo.Entity.Student;
@@ -25,6 +26,7 @@ import java.util.Set;
 @Service
 public class StudentServices {
 
+
      private StudentMapper studentMapper;
 
      private StudentCreateMapper studentCreateMapper;
@@ -45,8 +47,8 @@ public class StudentServices {
         this.studentCreateMapper = studentCreateMapper;
     }
 
-    @Autowired
-        private StudentRepository studentRepository;
+     @Autowired
+     private StudentRepository studentRepository;
 
      @Autowired
         private CourseRepository courseRepository;
@@ -58,6 +60,11 @@ public class StudentServices {
          return studentList;
      }
 
+    private StudentDTO convertToDTO(Student student) {
+         return studentMapper.convertToDTO(student);
+    }
+
+
     public StudentDTO getStudentByID(Integer id) throws ResourceNotFoundException {
         Student student = this.studentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + id));
 
@@ -66,7 +73,7 @@ public class StudentServices {
     }
 
     public StudentDTO createStudent(StudentCreationDTO studentdto)  throws ResourceNotFoundException{
-           Student student = convertToEntity(studentdto);
+           Student student = studentMapper.convertToEntity(studentdto);
 
         Set<Course> tempcourselist = student.getCourse();
         Set<Course> tempcourselist2 = new HashSet<>();
@@ -81,14 +88,16 @@ public class StudentServices {
         return convertToDTO(student);
     }
 
+
+
     public StudentCreationDTO updateStudent(StudentUpdateDTO studentUpdateDTO, Integer id) throws ResourceNotFoundException{
 
           Student student = this.studentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + id));
           studentMapper.updateEntity(studentUpdateDTO, student);
           this.studentRepository.save(student);
 
-            StudentCreationDTO studentCreationDTO1 = convertToCDTO(student);
-            studentCreationDTO1.setFullName(studentCreateMapper.convertToFullName(student));
+          StudentCreationDTO studentCreationDTO1 = convertToCDTO(student);
+
             return  studentCreationDTO1;
 
     }
@@ -132,26 +141,13 @@ public class StudentServices {
     private boolean isCourseExists(Course course, Student student){
         return student.getCourse().contains(course);
     }
-     public Student convertToEntity(StudentCreationDTO studentDTO) throws ResourceNotFoundException{
-         Student student = studentMapper.convertToEntity(studentDTO);
-//         student.setFirstName(studentCreateMapper.convertToFirstName(studentDTO));
-//         student.setLastName(studentCreateMapper.convertToLastName(studentDTO));
-         return student;
-
-     }
-     public StudentDTO convertToDTO(Student student){
-
-         StudentDTO studentDTO = studentMapper.convertToDTO(student);
-       return studentDTO;
-
-     }
 
     public StudentCreationDTO convertToCDTO(Student student){
 
         StudentCreationDTO studentDTO = studentMapper.convertToCDTO(student);
-        return studentDTO;
+         return studentDTO;
+     }
 
-    }
 
     public Student convertEntityToEntity(Student student){
           return  studentMapper.entityToEntity(student);
@@ -160,5 +156,4 @@ public class StudentServices {
     public void updateEnity(StudentUpdateDTO studentUpdateDTO, Student student){
          studentMapper.updateEntity(studentUpdateDTO, student);
     }
-
 }

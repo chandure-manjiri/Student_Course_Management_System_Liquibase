@@ -4,12 +4,15 @@ package StudentCourseLiquiBase.demo.Controller;
 
 import StudentCourseLiquiBase.demo.Dto.StudentCreationDTO;
 import StudentCourseLiquiBase.demo.Dto.StudentDTO;
+
 import StudentCourseLiquiBase.demo.Dto.StudentUpdateDTO;
+
 import StudentCourseLiquiBase.demo.Entity.Course;
 import StudentCourseLiquiBase.demo.Entity.Student;
 import StudentCourseLiquiBase.demo.Repository.CourseRepository;
 import StudentCourseLiquiBase.demo.Repository.StudentRepository;
 import StudentCourseLiquiBase.demo.Services.StudentServices;
+
 import StudentCourseLiquiBase.demo.exception.CourseExistsException;
 import StudentCourseLiquiBase.demo.exception.ResourceNotFoundException;
 import jakarta.validation.Valid;
@@ -80,8 +83,6 @@ public class StudentController {
         respoce.put("deleted", Boolean.TRUE);
         return  respoce;
     }
-
-
 
 
     @PostMapping("/students/{stud_id}/courses/{cour_id}")

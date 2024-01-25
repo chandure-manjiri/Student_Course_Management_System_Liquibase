@@ -17,7 +17,6 @@ public interface CourseMapper {
 
       Set<CourseDTO> convertToCDTOSet(Set<Course> courses);
       CourseDTO convertToDTO(Course course);
-      Course convertToEntity(CourseDTO courseDTO);
 
       @Mapping(source = "student", target = "studentName")
       AllCourseDTO convertToADTO(Course course);

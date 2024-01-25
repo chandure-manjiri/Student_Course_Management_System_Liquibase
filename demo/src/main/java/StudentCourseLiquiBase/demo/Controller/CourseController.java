@@ -4,6 +4,15 @@ package StudentCourseLiquiBase.demo.Controller;
 import StudentCourseLiquiBase.demo.Dto.*;
 import StudentCourseLiquiBase.demo.Services.CourseServices;
 import StudentCourseLiquiBase.demo.exception.CourseExistsException;
+import StudentCourseLiquiBase.demo.Dto.AllCourseDTO;
+import StudentCourseLiquiBase.demo.Dto.CourseCreationDTO;
+import StudentCourseLiquiBase.demo.Dto.CourseDTO;
+import StudentCourseLiquiBase.demo.Dto.StudentDTO;
+import StudentCourseLiquiBase.demo.Entity.Course;
+import StudentCourseLiquiBase.demo.Entity.Student;
+import StudentCourseLiquiBase.demo.Repository.CourseRepository;
+import StudentCourseLiquiBase.demo.Repository.StudentRepository;
+import StudentCourseLiquiBase.demo.Services.CourseServices;
 import StudentCourseLiquiBase.demo.exception.ResourceNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +85,8 @@ public class CourseController {
         return ResponseEntity.ok().body(allCourseDTO);
 
     }
+
+
 
     @DeleteMapping("/courses/{id}")
     public Map<String, Boolean> deleteCourse(@PathVariable(value = "id") Integer id) throws ResourceNotFoundException {

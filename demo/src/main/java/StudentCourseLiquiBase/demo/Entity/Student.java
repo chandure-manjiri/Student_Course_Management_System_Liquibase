@@ -1,5 +1,6 @@
 package StudentCourseLiquiBase.demo.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -30,6 +31,7 @@ public class Student {
     @JoinTable(name = "students_courses",
         joinColumns = @JoinColumn(name = "sid"),
         inverseJoinColumns = @JoinColumn(name = "cid"))
+    @JsonBackReference
     private Set<Course> course;
 
 

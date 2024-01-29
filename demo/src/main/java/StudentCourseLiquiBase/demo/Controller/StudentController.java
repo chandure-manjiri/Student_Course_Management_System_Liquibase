@@ -16,14 +16,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import java.util.*;
 
 
 @RestController
-@RequestMapping("/students_Courses")
+@RequestMapping("/students-Courses")
 public class StudentController {
 
     @Autowired
@@ -58,7 +55,7 @@ public class StudentController {
     }
 
     //add new student
-    @PostMapping("/students")
+
 
     public ResponseEntity<StudentDTO> createStudent(@Valid @RequestBody StudentCreationDTO student) throws ResourceNotFoundException{
          StudentDTO studentDTO = studentServices.createStudent(student);
@@ -71,6 +68,7 @@ public class StudentController {
 
         StudentCreationDTO studentCreationDTO = this.studentServices.updateStudent(student, stu_id);
         return ResponseEntity.ok().body(studentCreationDTO);
+
 
     }
 
@@ -87,6 +85,7 @@ public class StudentController {
 
     @PostMapping("/students/{stud_id}/assign_course/{cour_id}")
     public ResponseEntity<StudentDTO> AssignCourseToStudent(@PathVariable(name = "stud_id") Integer stu_id, @PathVariable(name = "cour_id") Integer cour_id) throws ResourceNotFoundException {
+
         Student student1 = this.studentRepository.findById(stu_id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + stu_id));
 
@@ -95,6 +94,7 @@ public class StudentController {
         return ResponseEntity.ok().body(studentDTO);
 
     }
+
 
 
 }

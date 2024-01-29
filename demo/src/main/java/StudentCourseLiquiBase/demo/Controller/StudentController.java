@@ -12,14 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import java.util.*;
 
 
 @RestController
-@RequestMapping("/students_Courses")
+@RequestMapping("/students-Courses")
 public class StudentController {
 
     @Autowired
@@ -54,9 +51,20 @@ public class StudentController {
 
     //add new student
     @PostMapping("/students")
-    public ResponseEntity<Student> createStudent(@RequestBody Student student){
-        Student student1 = this.studentRepository.save(student);
+    public ResponseEntity<Student> createStudent(@RequestBody Student student) throws ResourceNotFoundException{
+        Student student1 = student;
+        Set<Course> tempcourselist = student.getCourse();
+        Set<Course> tempcourselist2 = new HashSet<>();
+        student1.setCourse(tempcourselist2);
+        for(Course tempcourse : tempcourselist){
+            int cid = tempcourse.getId();
+            System.out.println("cid:"+cid);
+            Course validcourse = this.courseRepository.findById(cid).orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + cid));
+            student1.getCourse().add(validcourse);
+        }
+        this.studentRepository.save(student1);
         return new ResponseEntity<>(student1, HttpStatus.CREATED);
+
     }
 
 
@@ -76,6 +84,7 @@ public class StudentController {
 
         return ResponseEntity.ok(this.studentRepository.save(student1));
 
+
     }
 
     @DeleteMapping("/students/{id}")
@@ -90,8 +99,8 @@ public class StudentController {
         return  respoce;
     }
 
-    @PostMapping("/students/{stud_id}/assign_course/{cour_id}")
-    public ResponseEntity<Student> AssignCourseToStudent(@PathVariable(name = "stud_id") Integer stu_id, @PathVariable(name = "cour_id") Integer cour_id) throws ResourceNotFoundException {
+    @PutMapping("/students/{sid}/course/{cid}")
+    public ResponseEntity<Student> AssignCourseToStudent(@PathVariable(name = "sid") Integer stu_id, @PathVariable(name = "cid") Integer cour_id) throws ResourceNotFoundException {
         Student student1 = this.studentRepository.findById(stu_id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + stu_id));
 
@@ -104,7 +113,7 @@ public class StudentController {
 
     }
 
-    @PostMapping("/students/{stud_id}/remove_course/{cour_id}")
+    @PutMapping("/students/{stud_id}/course/{cour_id}")
     public ResponseEntity<Student> RemoveCourseToStudent(@PathVariable(name = "stud_id") Integer stu_id, @PathVariable(name = "cour_id") Integer cour_id) throws ResourceNotFoundException {
         Student student1 = this.studentRepository.findById(stu_id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + stu_id));

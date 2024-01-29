@@ -24,7 +24,7 @@ import java.util.Set;
 
 
 @RestController
-@RequestMapping("/students_Courses")
+@RequestMapping("/students-Courses")
 public class CourseController {
 
     @Autowired
@@ -56,10 +56,10 @@ public class CourseController {
         return ResponseEntity.ok().body(course);
 
     }
-
-
-    @GetMapping("/courses/getstudents/{id}")
+    
+    @GetMapping("/courses/{id}/students")
     public ResponseEntity<Set<StudentDTO>> getStudentsByCourseId(@PathVariable(name = "id") Integer id) throws ResourceNotFoundException {
+
 
         Set<StudentDTO> studentSet = this.courseServices.getAllStudents(id);
         return ResponseEntity.ok().body(studentSet);

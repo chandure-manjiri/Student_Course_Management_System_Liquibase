@@ -6,6 +6,8 @@ import StudentCourseLiquiBase.demo.Dto.CourseDTO;
 import StudentCourseLiquiBase.demo.Dto.StudentDTO;
 import StudentCourseLiquiBase.demo.Entity.Course;
 import StudentCourseLiquiBase.demo.Entity.Student;
+import StudentCourseLiquiBase.demo.MapStruct.CourseMapper;
+import StudentCourseLiquiBase.demo.MapStruct.StudentMapper;
 import StudentCourseLiquiBase.demo.Repository.CourseRepository;
 import StudentCourseLiquiBase.demo.Repository.StudentRepository;
 import StudentCourseLiquiBase.demo.exception.ResourceNotFoundException;
@@ -18,7 +20,18 @@ import java.util.Set;
 
 @Service
 public class CourseServices {
+    private StudentMapper studentMapper;
 
+    private CourseMapper courseMapper;
+    @Autowired
+    public void StudentMapperService(StudentMapper studentMapper){
+        this.studentMapper = studentMapper;
+    }
+
+    @Autowired
+    public void CourseMapperService(CourseMapper courseMapper){
+        this.courseMapper = courseMapper;
+    }
     @Autowired
     private StudentRepository studentRepository;
 
@@ -76,63 +89,28 @@ public class CourseServices {
         return convertToADTO(course);
     }
     public Course convertToEntity(CourseCreationDTO courseCreationDTO){
-        Course course = new Course();
-        course.setName(courseCreationDTO.getName());
+        Course course = courseMapper.convertToEntity(courseCreationDTO);
+        return course;
+    }
+
+    public Course convertToEntity(CourseDTO courseDTO){
+        Course course = courseMapper.convertToEntity(courseDTO);
         return course;
     }
     public AllCourseDTO convertToADTO(Course course){
-        AllCourseDTO courseDTO = new AllCourseDTO();
-        courseDTO.setId(course.getId());
-        courseDTO.setName(course.getName());
-
-        Set<String> tempStudentList = new HashSet<String>();
-        for(Student student : course.getStudent()){
-
-            String temp = student.getFirstName();
-            temp += " ";
-            temp += student.getLastname();
-            tempStudentList.add(temp);
-        }
-
-        courseDTO.setStudentName(tempStudentList);
+        AllCourseDTO  courseDTO = courseMapper.convertToADTO(course);
          return  courseDTO;
 
     }
     public CourseDTO convertToDTO(Course course) {
 
-        CourseDTO courseDTO = new CourseDTO();
-        courseDTO.setId(course.getId());
-        courseDTO.setName(course.getName());
-
-
+        CourseDTO courseDTO = courseMapper.convertToDTO(course);
         return courseDTO;
     }
-      // courseDTO.setStudentDTOSet(new HashSet<StudentDTO>());
-
-//       Set<StudentDTO> tempStudentLDtoList = new HashSet<StudentDTO>();
-//       for(Student student : course.getStudent()){
-//           StudentDTO studentDTO = convertToSDTO(student);
-//           tempStudentLDtoList.add(studentDTO);
-//       }
-//       courseDTO.setStudentDTOSet(tempStudentLDtoList);
-//        return courseDTO;
-
 
     public StudentDTO convertToSDTO(Student student){
 
-        StudentDTO studentDTO = new StudentDTO();
-        studentDTO.setId(student.getId());
-        studentDTO.setFirstName(student.getFirstName());
-        studentDTO.setLastName(student.getLastname());
-        studentDTO.setGender(student.getGender());
-        studentDTO.setCourseList(new HashSet<CourseDTO>());
-        for(Course course : student.getCourse()){
-            CourseDTO courseDTO = new CourseDTO();
-            courseDTO.setId(course.getId());
-            courseDTO.setName(course.getName());
-            studentDTO.getCourseList().add(courseDTO);
-        }
-
+        StudentDTO studentDTO =  studentMapper.convertToDTO(student);
         return studentDTO;
 
     }

@@ -5,6 +5,8 @@ import StudentCourseLiquiBase.demo.Dto.StudentCreationDTO;
 import StudentCourseLiquiBase.demo.Dto.StudentDTO;
 import StudentCourseLiquiBase.demo.Entity.Course;
 import StudentCourseLiquiBase.demo.Entity.Student;
+import StudentCourseLiquiBase.demo.MapStruct.CourseMapper;
+import StudentCourseLiquiBase.demo.MapStruct.StudentMapper;
 import StudentCourseLiquiBase.demo.Repository.CourseRepository;
 import StudentCourseLiquiBase.demo.Repository.StudentRepository;
 import StudentCourseLiquiBase.demo.exception.ResourceNotFoundException;
@@ -20,6 +22,18 @@ import java.util.Set;
 @Service
 public class StudentServices {
 
+     private StudentMapper studentMapper;
+
+     private CourseMapper courseMapper;
+     @Autowired
+     public void StudentMapperService(StudentMapper studentMapper){
+         this.studentMapper = studentMapper;
+     }
+
+     @Autowired
+     public void CourseMapperService(CourseMapper courseMapper){
+         this.courseMapper = courseMapper;
+     }
      @Autowired
         private StudentRepository studentRepository;
 
@@ -105,60 +119,20 @@ public class StudentServices {
         return convertToDTO(student1);
     }
      public Student convertToEntity(StudentCreationDTO studentDTO) throws ResourceNotFoundException{
-         Student student = new Student();
-         student.setId(studentDTO.getId());
-         student.setAge(studentDTO.getAge());
-         student.setGender(studentDTO.getGender());
-         student.setFirstName(studentDTO.getFirstName());
-         student.setLastName(studentDTO.getLastName());
-         student.setPhoneNumber(studentDTO.getPhoneNumber());
-
-         Set<Course> tempCourseSet = new HashSet<>();
-         for(CourseDTO courseDTO : studentDTO.getCourse()){
-             Course course1 = this.courseRepository.findById(courseDTO.getId()).orElseThrow(() -> new ResourceNotFoundException("Course not found this UUID ::" + courseDTO.getId()));
-             tempCourseSet.add(course1);
-         }
-
-         student.setCourse(tempCourseSet);
+         Student student = studentMapper.convertToEntity(studentDTO);
          return student;
 
      }
      public StudentDTO convertToDTO(Student student){
 
-         StudentDTO studentDTO = new StudentDTO();
-         studentDTO.setId(student.getId());
-         studentDTO.setFirstName(student.getFirstName());
-         studentDTO.setLastName(student.getLastname());
-         studentDTO.setGender(student.getGender());
-         studentDTO.setCourseList(new HashSet<CourseDTO>());
-         for(Course course : student.getCourse()){
-             CourseDTO courseDTO = new CourseDTO();
-             courseDTO.setId(course.getId());
-             courseDTO.setName(course.getName());
-             studentDTO.getCourseList().add(courseDTO);
-         }
-
+         StudentDTO studentDTO = studentMapper.convertToDTO(student);
        return studentDTO;
 
      }
 
     public StudentCreationDTO convertToCDTO(Student student){
 
-        StudentCreationDTO studentDTO = new StudentCreationDTO();
-        studentDTO.setId(student.getId());
-        studentDTO.setFirstName(student.getFirstName());
-        studentDTO.setLastName(student.getLastname());
-        studentDTO.setGender(student.getGender());
-        studentDTO.setPhoneNumber(student.getPhoneNumber());
-        studentDTO.setAge(student.getAge());
-        studentDTO.setCourse(new HashSet<CourseDTO>());
-        for(Course course : student.getCourse()){
-            CourseDTO courseDTO = new CourseDTO();
-            courseDTO.setId(course.getId());
-            courseDTO.setName(course.getName());
-            studentDTO.getCourse().add(courseDTO);
-        }
-
+        StudentCreationDTO studentDTO = studentMapper.convertToCDTO(student);
         return studentDTO;
 
     }

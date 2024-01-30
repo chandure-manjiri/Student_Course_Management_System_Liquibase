@@ -56,10 +56,10 @@ public class StudentController {
 
     //add new student
     @PostMapping("/students")
+
     public ResponseEntity<StudentDTO> createStudent(@Valid @RequestBody StudentCreationDTO student) throws ResourceNotFoundException{
          StudentDTO studentDTO = studentServices.createStudent(student);
         return new ResponseEntity<>(studentDTO, HttpStatus.CREATED);
-
     }
 
     //update student
@@ -68,7 +68,6 @@ public class StudentController {
 
         StudentCreationDTO studentCreationDTO = this.studentServices.updateStudent(student, stu_id);
         return ResponseEntity.ok().body(studentCreationDTO);
-
 
     }
 
@@ -82,9 +81,10 @@ public class StudentController {
         return  respoce;
     }
 
-    @PutMapping("/students/{sid}/courses/{cid}")
-    public ResponseEntity<StudentDTO> AssignCourseToStudent(@PathVariable(name = "sid") Integer stu_id, @PathVariable(name = "cid") Integer cour_id) throws ResourceNotFoundException {
 
+
+    @PostMapping("/students/{stud_id}/courses/{cour_id}")
+    public ResponseEntity<StudentDTO> AssignCourseToStudent(@PathVariable(name = "stud_id") Integer stu_id, @PathVariable(name = "cour_id") Integer cour_id) throws ResourceNotFoundException {
         Student student1 = this.studentRepository.findById(stu_id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + stu_id));
 
@@ -93,4 +93,5 @@ public class StudentController {
         return ResponseEntity.ok().body(studentDTO);
 
     }
+
 }

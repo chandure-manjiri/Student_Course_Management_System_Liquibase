@@ -59,6 +59,7 @@ public class CourseController {
 
 
     @GetMapping("/courses/{id}/students")
+
     public ResponseEntity<Set<StudentDTO>> getStudentsByCourseId(@PathVariable(name = "id") Integer id) throws ResourceNotFoundException {
 
         Set<StudentDTO> studentSet = this.courseServices.getAllStudents(id);
@@ -82,7 +83,9 @@ public class CourseController {
 
     }
 
+
         @PutMapping("/courses/{cid}/students/{sid}")
+
     public ResponseEntity<AllCourseDTO> RemoveCourseFromStudent(@PathVariable(name = "sid") Integer sid, @PathVariable(name = "cid") Integer cid) throws ResourceNotFoundException {
          AllCourseDTO allCourseDTO = this.courseServices.removeStudentFromCourse(sid,cid);
 

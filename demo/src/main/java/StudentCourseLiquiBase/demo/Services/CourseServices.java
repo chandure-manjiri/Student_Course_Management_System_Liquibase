@@ -103,6 +103,13 @@ public class CourseServices {
     }
     public AllCourseDTO convertToADTO(Course course){
           AllCourseDTO  courseDTO = courseMapper.convertToADTO(course);
+        Set<StudentNameDto> studentDTOSet = new HashSet<>();
+        for(Student student : course.getStudent()){
+            StudentNameDto studentNameDto = convertToStudentNameDto(student);
+            studentDTOSet.add(studentNameDto);
+        }
+        courseDTO.setStudentName(studentDTOSet);
+
           return  courseDTO;
 
     }

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = "spring", uses = CourseMapper.class)
 public interface CourseMapper {
-      CourseMapper INSTANCE = Mappers.getMapper(CourseMapper.class);
 
       CourseDTO convertToDTO(Course course);
       Course convertToEntity(CourseDTO courseDTO);

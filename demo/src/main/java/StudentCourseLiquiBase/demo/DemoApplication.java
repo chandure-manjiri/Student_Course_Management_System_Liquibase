@@ -25,7 +25,7 @@ import org.springframework.context.annotation.ComponentScan;
 		)
 )
 @SpringBootApplication
-@ComponentScan("StudentCourseLiquiBase.demo.MapStruct")
+//@ComponentScan("StudentCourseLiquiBase.demo.MapStruct")
  public class DemoApplication {
 
 	public static void main(String[] args) {

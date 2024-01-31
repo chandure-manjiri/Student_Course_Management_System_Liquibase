@@ -5,10 +5,6 @@ import StudentCourseLiquiBase.demo.Dto.AllCourseDTO;
 import StudentCourseLiquiBase.demo.Dto.CourseCreationDTO;
 import StudentCourseLiquiBase.demo.Dto.CourseDTO;
 import StudentCourseLiquiBase.demo.Dto.StudentDTO;
-import StudentCourseLiquiBase.demo.Entity.Course;
-import StudentCourseLiquiBase.demo.Entity.Student;
-import StudentCourseLiquiBase.demo.Repository.CourseRepository;
-import StudentCourseLiquiBase.demo.Repository.StudentRepository;
 import StudentCourseLiquiBase.demo.Services.CourseServices;
 import StudentCourseLiquiBase.demo.exception.ResourceNotFoundException;
 import jakarta.validation.Valid;
@@ -27,11 +23,7 @@ import java.util.Set;
 @RequestMapping("/students-Courses")
 public class CourseController {
 
-    @Autowired
-    private StudentRepository studentRepository;
 
-    @Autowired
-    private CourseRepository courseRepository;
 
     @Autowired
     private CourseServices courseServices;

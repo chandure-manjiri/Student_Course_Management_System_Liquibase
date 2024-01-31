@@ -10,6 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StudentNameDto {
-    String firstName;
-    String lastName;
+    private Integer id;
+    private String firstName;
+    private String lastName;
 }

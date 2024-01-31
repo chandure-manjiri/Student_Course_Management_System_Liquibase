@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = "spring", uses = CourseMapper.class)
 public interface StudentMapper {
-    StudentMapper INSTANCE = Mappers.getMapper(StudentMapper.class);
 
     StudentDTO convertToDTO(Student student);
     StudentCreationDTO convertToCDTO(Student student);

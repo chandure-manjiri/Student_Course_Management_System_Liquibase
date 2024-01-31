@@ -1,10 +1,7 @@
 package StudentCourseLiquiBase.demo.Controller;
 
 
-import StudentCourseLiquiBase.demo.Dto.AllCourseDTO;
-import StudentCourseLiquiBase.demo.Dto.CourseCreationDTO;
-import StudentCourseLiquiBase.demo.Dto.CourseDTO;
-import StudentCourseLiquiBase.demo.Dto.StudentDTO;
+import StudentCourseLiquiBase.demo.Dto.*;
 import StudentCourseLiquiBase.demo.Services.CourseServices;
 import StudentCourseLiquiBase.demo.exception.ResourceNotFoundException;
 import jakarta.validation.Valid;
@@ -50,11 +47,11 @@ public class CourseController {
     }
 
 
+
     @GetMapping("/courses/{id}/students")
+    public ResponseEntity<Set<StudentNameDto>> getStudentsByCourseId(@PathVariable(name = "id") Integer id) throws ResourceNotFoundException {
 
-    public ResponseEntity<Set<StudentDTO>> getStudentsByCourseId(@PathVariable(name = "id") Integer id) throws ResourceNotFoundException {
-
-        Set<StudentDTO> studentSet = this.courseServices.getAllStudents(id);
+        Set<StudentNameDto> studentSet = this.courseServices.getAllStudents(id);
         return ResponseEntity.ok().body(studentSet);
 
     }
@@ -69,7 +66,6 @@ public class CourseController {
     public ResponseEntity<AllCourseDTO> updateCourse(@Valid @RequestBody CourseCreationDTO courseCreationDTO, @PathVariable(name = "id") Integer id) throws ResourceNotFoundException {
 
         AllCourseDTO allCourseDTO = this.courseServices.updateCourse(courseCreationDTO, id);
-
 
         return ResponseEntity.ok().body(allCourseDTO);
 
@@ -94,17 +90,6 @@ public class CourseController {
         return  respoce;
     }
 
-    @PutMapping("/courses/{cid}/students/{sid}")
-    public ResponseEntity<Student> RemoveCourseToStudent(@PathVariable(name = "cid") Integer cid, @PathVariable(name = "sid") Integer sid) throws ResourceNotFoundException {
 
-            Course course = this.courseRepository.findById(cid).orElseThrow(() -> new ResourceNotFoundException("Course not found this UUID ::" + cid));
-            Student student = this.studentRepository.findById(sid).orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + sid));
-            student.getCourse().remove(course);
-            this.studentRepository.save(student);
-
-        return ResponseEntity.ok(this.studentRepository.save(student));
-
-
-    }
 
 }

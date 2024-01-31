@@ -1,9 +1,6 @@
 package StudentCourseLiquiBase.demo.Services;
 
-import StudentCourseLiquiBase.demo.Dto.AllCourseDTO;
-import StudentCourseLiquiBase.demo.Dto.CourseCreationDTO;
-import StudentCourseLiquiBase.demo.Dto.CourseDTO;
-import StudentCourseLiquiBase.demo.Dto.StudentDTO;
+import StudentCourseLiquiBase.demo.Dto.*;
 import StudentCourseLiquiBase.demo.Entity.Course;
 import StudentCourseLiquiBase.demo.Entity.Student;
 import StudentCourseLiquiBase.demo.MapStruct.CourseMapper;
@@ -49,13 +46,13 @@ public class CourseServices {
         return convertToADTO(course);
     }
 
-    public Set<StudentDTO> getAllStudents(Integer id) throws ResourceNotFoundException{
+    public Set<StudentNameDto> getAllStudents(Integer id) throws ResourceNotFoundException{
             Course course = this.courseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Course not found this UUID ::" + id));
 
-            Set<StudentDTO> studentDTOSet = new HashSet<>();
+            Set<StudentNameDto> studentDTOSet = new HashSet<>();
             for(Student student : course.getStudent()){
-                StudentDTO studentDTO = convertToSDTO(student);
-                studentDTOSet.add(studentDTO);
+                StudentNameDto studentNameDto = convertToStudentNameDto(student);
+                studentDTOSet.add(studentNameDto);
             }
             return  studentDTOSet;
     }
@@ -66,6 +63,8 @@ public class CourseServices {
               Course course1 = this.courseRepository.save(course);
              return convertToDTO(course1);
     }
+
+
 
     public void deleteCourse(Integer id) throws ResourceNotFoundException{
         Course course = this.courseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Course not found this UUID ::" + id));
@@ -93,13 +92,18 @@ public class CourseServices {
         return course;
     }
 
+    public StudentNameDto convertToStudentNameDto(Student student){
+        StudentNameDto studentNameDto = studentMapper.convertToStudentNameDto(student);
+        return  studentNameDto;
+    }
+
     public Course convertToEntity(CourseDTO courseDTO){
         Course course = courseMapper.convertToEntity(courseDTO);
         return course;
     }
     public AllCourseDTO convertToADTO(Course course){
-        AllCourseDTO  courseDTO = courseMapper.convertToADTO(course);
-         return  courseDTO;
+          AllCourseDTO  courseDTO = courseMapper.convertToADTO(course);
+          return  courseDTO;
 
     }
     public CourseDTO convertToDTO(Course course) {

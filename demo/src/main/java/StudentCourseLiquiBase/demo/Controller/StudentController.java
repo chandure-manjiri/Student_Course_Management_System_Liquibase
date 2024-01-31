@@ -68,7 +68,6 @@ public class StudentController {
 
         StudentCreationDTO studentCreationDTO = this.studentServices.updateStudent(student, stu_id);
         return ResponseEntity.ok().body(studentCreationDTO);
-
     }
 
     @DeleteMapping("/students/{id}")

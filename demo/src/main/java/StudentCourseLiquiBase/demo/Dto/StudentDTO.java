@@ -14,9 +14,8 @@ public class StudentDTO {
     private Integer Id;
     private String firstName;
     private String lastName;
-
+    private String fullName;
     private String gender;
-
+    private Integer numberOfCourse;
     private Set<CourseDTO> courseList;
-
 }

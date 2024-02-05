@@ -22,5 +22,8 @@ public interface CourseMapper {
       @Mapping(source = "student", target = "studentName")
       AllCourseDTO convertToADTO(Course course);
 
-      Course convertToEntity(CourseCreationDTO courseCreationDTO);
+
+      @Mapping(target = "id", ignore = true)
+      Course convertToEntityUpdate(CourseCreationDTO courseCreationDTO);
+      Course convertToEntityCreation(CourseCreationDTO courseCreationDTO);
 }

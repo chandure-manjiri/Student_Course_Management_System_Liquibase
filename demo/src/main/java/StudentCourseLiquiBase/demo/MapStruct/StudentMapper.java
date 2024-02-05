@@ -1,13 +1,11 @@
 package StudentCourseLiquiBase.demo.MapStruct;
 
-import StudentCourseLiquiBase.demo.Dto.CourseDTO;
-import StudentCourseLiquiBase.demo.Dto.StudentCreationDTO;
-import StudentCourseLiquiBase.demo.Dto.StudentDTO;
-import StudentCourseLiquiBase.demo.Dto.StudentNameDto;
+import StudentCourseLiquiBase.demo.Dto.*;
 import StudentCourseLiquiBase.demo.Entity.Course;
 import StudentCourseLiquiBase.demo.Entity.Student;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 
 import java.util.Set;
@@ -39,6 +37,36 @@ public interface StudentMapper {
     }
     StudentCreationDTO convertToCDTO(Student student);
 
-    Student convertToEntity(StudentCreationDTO studentCreationDTO);
+    Student entityToEntity(Student student);
+
+   @Mapping(target = "firstName", expression = "java(convertToFirstName(studentCreationDTO))")
+   @Mapping(target = "lastName", expression = "java(convertToLastName(studentCreationDTO))")
+   Student convertToEntity(StudentCreationDTO studentCreationDTO);
+
+    @Named("toFirstName")
+    default String convertToFirstName(StudentCreationDTO studentCreationDTO){
+        return studentCreationDTO.getFullName().substring(0, studentCreationDTO.getFullName().indexOf(" "));
+    }
+    @Named("toLastName")
+    default String convertToLastName(StudentCreationDTO studentCreationDTO){
+        return studentCreationDTO.getFullName().substring(studentCreationDTO.getFullName().indexOf(" ") + 1);
+    }
+
+    @Mapping(source = "age", target = "age", defaultExpression = "java(student.getAge())")
+    @Mapping(source = "phoneNumber", target = "phoneNumber", defaultExpression = "java(student.getPhoneNumber())")
+    @Mapping(source = "fullName",target = "firstName", qualifiedByName = "toFirstName", defaultExpression = "java(student.getFirstName())")
+    @Mapping(source = "fullName", target = "lastName", qualifiedByName = "toLastName", defaultExpression = "java(student.getLastname())")
+   // @Mapping(target = "lastName", expression = "java(convertToLastNameUp(studentUpdateDTO))")
+    void updateEntity(StudentUpdateDTO studentUpdateDTO, @MappingTarget Student student);
+    @Named("toFirstName")
+    default String convertToFirstNameUp(String fullName){
+        return fullName.substring(0, fullName.indexOf(" "));
+    }
+    @Named("toLastName")
+    default String convertToLastNameUp(String fullName){
+        return fullName.substring(fullName.indexOf(" ") + 1);
+    }
+
 
 }
+

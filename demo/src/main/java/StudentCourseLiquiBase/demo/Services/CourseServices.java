@@ -59,7 +59,7 @@ public class CourseServices {
 
     public CourseDTO createCourse(CourseCreationDTO courseCreationDTO){
 
-             Course course = convertToEntity(courseCreationDTO);
+             Course course = convertToEntityCreation(courseCreationDTO);
               Course course1 = this.courseRepository.save(course);
              return convertToDTO(course1);
     }
@@ -73,7 +73,8 @@ public class CourseServices {
 
     public AllCourseDTO updateCourse(CourseCreationDTO courseCreationDTO, Integer id) throws ResourceNotFoundException{
         Course course = this.courseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Course not found this UUID ::" + id));
-        course.setName(courseCreationDTO.getName());
+        course = convertToEntityUpdate(courseCreationDTO);
+      //  course = course1;
         this.courseRepository.save(course);
 
         return convertToADTO(course);
@@ -87,9 +88,8 @@ public class CourseServices {
 
         return convertToADTO(course);
     }
-    public Course convertToEntity(CourseCreationDTO courseCreationDTO){
-        Course course = courseMapper.convertToEntity(courseCreationDTO);
-        return course;
+    public Course convertToEntityCreation(CourseCreationDTO courseCreationDTO){
+        return courseMapper.convertToEntityCreation(courseCreationDTO);
     }
 
     public StudentNameDto convertToStudentNameDto(Student student){
@@ -124,6 +124,10 @@ public class CourseServices {
         StudentDTO studentDTO =  studentMapper.convertToDTO(student);
         return studentDTO;
 
+    }
+
+    public Course convertToEntityUpdate(CourseCreationDTO courseCreationDTO){
+        return courseMapper.convertToEntityUpdate(courseCreationDTO);
     }
 
 

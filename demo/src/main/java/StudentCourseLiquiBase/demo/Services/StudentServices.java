@@ -3,9 +3,11 @@ package StudentCourseLiquiBase.demo.Services;
 import StudentCourseLiquiBase.demo.Dto.CourseDTO;
 import StudentCourseLiquiBase.demo.Dto.StudentCreationDTO;
 import StudentCourseLiquiBase.demo.Dto.StudentDTO;
+import StudentCourseLiquiBase.demo.Dto.StudentUpdateDTO;
 import StudentCourseLiquiBase.demo.Entity.Course;
 import StudentCourseLiquiBase.demo.Entity.Student;
 import StudentCourseLiquiBase.demo.MapStruct.CourseMapper;
+import StudentCourseLiquiBase.demo.MapStruct.StudentCreateMapper;
 import StudentCourseLiquiBase.demo.MapStruct.StudentMapper;
 import StudentCourseLiquiBase.demo.Repository.CourseRepository;
 import StudentCourseLiquiBase.demo.Repository.StudentRepository;
@@ -24,6 +26,8 @@ public class StudentServices {
 
      private StudentMapper studentMapper;
 
+     private StudentCreateMapper studentCreateMapper;
+
      private CourseMapper courseMapper;
      @Autowired
      public void StudentMapperService(StudentMapper studentMapper){
@@ -34,7 +38,13 @@ public class StudentServices {
      public void CourseMapperService(CourseMapper courseMapper){
          this.courseMapper = courseMapper;
      }
-     @Autowired
+
+    @Autowired
+    public void StudentCreateMapperService(StudentCreateMapper studentCreateMapper){
+        this.studentCreateMapper = studentCreateMapper;
+    }
+
+    @Autowired
         private StudentRepository studentRepository;
 
      @Autowired
@@ -70,33 +80,14 @@ public class StudentServices {
         return convertToDTO(student);
     }
 
-    public StudentCreationDTO updateStudent(StudentCreationDTO studentCreationDTO, Integer id) throws ResourceNotFoundException{
-            Student student = this.studentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + id));
-          //  Student student1 = convertToEntity(studentCreationDTO);
+    public StudentCreationDTO updateStudent(StudentUpdateDTO studentUpdateDTO, Integer id) throws ResourceNotFoundException{
 
-            student.setGender(studentCreationDTO.getGender());
-            student.setAge(studentCreationDTO.getAge());
-            student.setLastName(studentCreationDTO.getLastName());
-            student.setFirstName(studentCreationDTO.getFirstName());
-            student.setPhoneNumber(studentCreationDTO.getPhoneNumber());
-
-           // Set<CourseDTO> cdt = new HashSet<>();
-            Set<CourseDTO> cdt1 = studentCreationDTO.getCourse();
-
-            Set<Course> tempcourselist = new HashSet<>();
-            // course dto to course
-            for(CourseDTO courseDTO : cdt1){
-                Integer cid = courseDTO.getId();
-                Course validcourse = this.courseRepository.findById(cid).orElseThrow(() -> new ResourceNotFoundException("Course not found this UUID ::" + cid));
-                tempcourselist.add(validcourse);
-            }
-            student.setCourse(tempcourselist);
-            //student.setCourse(studentCreationDTO.getCourse());
-
-            this.studentRepository.save(student);
+          Student student = this.studentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + id));
+          studentMapper.updateEntity(studentUpdateDTO, student);
+          this.studentRepository.save(student);
 
             StudentCreationDTO studentCreationDTO1 = convertToCDTO(student);
-
+            studentCreationDTO1.setFullName(studentCreateMapper.convertToFullName(student));
             return  studentCreationDTO1;
 
     }
@@ -120,6 +111,8 @@ public class StudentServices {
     }
      public Student convertToEntity(StudentCreationDTO studentDTO) throws ResourceNotFoundException{
          Student student = studentMapper.convertToEntity(studentDTO);
+//         student.setFirstName(studentCreateMapper.convertToFirstName(studentDTO));
+//         student.setLastName(studentCreateMapper.convertToLastName(studentDTO));
          return student;
 
      }
@@ -135,6 +128,14 @@ public class StudentServices {
         StudentCreationDTO studentDTO = studentMapper.convertToCDTO(student);
         return studentDTO;
 
+    }
+
+    public Student convertEntityToEntity(Student student){
+          return  studentMapper.entityToEntity(student);
+    }
+
+    public void updateEnity(StudentUpdateDTO studentUpdateDTO, Student student){
+         studentMapper.updateEntity(studentUpdateDTO, student);
     }
 
 }

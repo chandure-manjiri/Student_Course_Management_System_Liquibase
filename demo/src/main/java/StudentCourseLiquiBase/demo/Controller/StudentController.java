@@ -4,6 +4,7 @@ package StudentCourseLiquiBase.demo.Controller;
 
 import StudentCourseLiquiBase.demo.Dto.StudentCreationDTO;
 import StudentCourseLiquiBase.demo.Dto.StudentDTO;
+import StudentCourseLiquiBase.demo.Dto.StudentUpdateDTO;
 import StudentCourseLiquiBase.demo.Entity.Course;
 import StudentCourseLiquiBase.demo.Entity.Student;
 import StudentCourseLiquiBase.demo.Repository.CourseRepository;
@@ -67,7 +68,7 @@ public class StudentController {
 
     //update student
     @PutMapping("/students/{id}")
-    public ResponseEntity<StudentCreationDTO> updateStudent(@Valid @RequestBody StudentCreationDTO student, @PathVariable(name = "id") Integer stu_id) throws ResourceNotFoundException {
+    public ResponseEntity<StudentCreationDTO> updateStudent(@Valid @RequestBody StudentUpdateDTO student, @PathVariable(name = "id") Integer stu_id) throws ResourceNotFoundException {
 
         StudentCreationDTO studentCreationDTO = this.studentServices.updateStudent(student, stu_id);
         return ResponseEntity.ok().body(studentCreationDTO);
@@ -84,7 +85,7 @@ public class StudentController {
     }
 
 
-    @PostMapping("/students/{stud_id}/assign_course/{cour_id}")
+    @PutMapping("/students/{stud_id}/assign_course/{cour_id}")
     public ResponseEntity<StudentDTO> AssignCourseToStudent(@PathVariable(name = "stud_id") Integer stu_id, @PathVariable(name = "cour_id") Integer cour_id) throws ResourceNotFoundException {
         Student student1 = this.studentRepository.findById(stu_id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + stu_id));

@@ -84,6 +84,7 @@ public class StudentController {
 
     @PutMapping("/students/{sid}/courses/{cid}")
     public ResponseEntity<StudentDTO> AssignCourseToStudent(@PathVariable(name = "sid") Integer stu_id, @PathVariable(name = "cid") Integer cour_id) throws ResourceNotFoundException {
+
         Student student1 = this.studentRepository.findById(stu_id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + stu_id));
 
@@ -92,5 +93,4 @@ public class StudentController {
         return ResponseEntity.ok().body(studentDTO);
 
     }
-
 }

@@ -7,6 +7,7 @@ import StudentCourseLiquiBase.demo.MapStruct.CourseMapper;
 import StudentCourseLiquiBase.demo.MapStruct.StudentMapper;
 import StudentCourseLiquiBase.demo.Repository.CourseRepository;
 import StudentCourseLiquiBase.demo.Repository.StudentRepository;
+import StudentCourseLiquiBase.demo.exception.CourseExistsException;
 import StudentCourseLiquiBase.demo.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -80,13 +81,21 @@ public class CourseServices {
         return convertToADTO(course);
     }
 
-    public AllCourseDTO removeStudentFromCourse(Integer sid, Integer cid) throws ResourceNotFoundException{
+    public AllCourseDTO removeStudentFromCourse(Integer cid, Integer sid) throws ResourceNotFoundException, CourseExistsException{
         Course course = this.courseRepository.findById(cid).orElseThrow(() -> new ResourceNotFoundException("Course not found this UUID ::" + cid));
         Student student = this.studentRepository.findById(sid).orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + sid));
-        student.getCourse().remove(course);
-        this.studentRepository.save(student);
 
-        return convertToADTO(course);
+        if(!isCourseExists(course, student)){
+            throw new CourseExistsException("This student is already is removed from this course");
+        } else{
+            course.getStudent().remove(student);
+            this.courseRepository.save(course);
+            return convertToADTO(course);
+        }
+    }
+
+    private boolean isCourseExists(Course course, Student student){
+        return student.getCourse().contains(course);
     }
     public Course convertToEntityCreation(CourseCreationDTO courseCreationDTO){
         return courseMapper.convertToEntityCreation(courseCreationDTO);

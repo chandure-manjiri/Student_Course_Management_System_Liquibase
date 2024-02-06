@@ -11,6 +11,7 @@ import StudentCourseLiquiBase.demo.MapStruct.StudentCreateMapper;
 import StudentCourseLiquiBase.demo.MapStruct.StudentMapper;
 import StudentCourseLiquiBase.demo.Repository.CourseRepository;
 import StudentCourseLiquiBase.demo.Repository.StudentRepository;
+import StudentCourseLiquiBase.demo.exception.CourseExistsException;
 import StudentCourseLiquiBase.demo.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -104,10 +105,32 @@ public class StudentServices {
         Course course1 = this.courseRepository.findById(cour_id)
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found this UUID ::" + cour_id));
 
+        if(isCourseExists(course1, student1)){
+            throw new CourseExistsException("This course is already assigned with student");
+        }
+        else{
+            student1.getCourse().add(course1);
+            studentRepository.save(student1);
+            return convertToDTO(student1);
+        }
+     }
 
-        student1.getCourse().add(course1);
-        studentRepository.save(student1);
-        return convertToDTO(student1);
+    public StudentDTO removeCourseFromStudent(Integer sid, Integer cid) throws ResourceNotFoundException{
+        Course course = this.courseRepository.findById(cid).orElseThrow(() -> new ResourceNotFoundException("Course not found this UUID ::" + cid));
+        Student student = this.studentRepository.findById(sid).orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + sid));
+
+        if(!isCourseExists(course, student)){
+            throw new CourseExistsException("This course is already removed from student");
+        }
+        else{
+            student.getCourse().remove(course);
+            this.studentRepository.save(student);
+            return convertToDTO(student);
+        }
+     }
+
+    private boolean isCourseExists(Course course, Student student){
+        return student.getCourse().contains(course);
     }
      public Student convertToEntity(StudentCreationDTO studentDTO) throws ResourceNotFoundException{
          Student student = studentMapper.convertToEntity(studentDTO);

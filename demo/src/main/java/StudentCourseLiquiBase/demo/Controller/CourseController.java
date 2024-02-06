@@ -70,7 +70,7 @@ public class CourseController {
 
     }
 
-        @PutMapping("/courses/{cid}/student/{sid}")
+    @PutMapping("/courses/{cid}/student/{sid}")
     public ResponseEntity<AllCourseDTO> RemoveCourseFromStudent(@PathVariable(name = "sid") Integer sid, @PathVariable(name = "cid") Integer cid) throws ResourceNotFoundException {
          AllCourseDTO allCourseDTO = this.courseServices.removeStudentFromCourse(sid,cid);
 

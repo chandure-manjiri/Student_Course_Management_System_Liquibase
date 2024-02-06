@@ -99,7 +99,7 @@ public class StudentController {
         return  respoce;
     }
 
-    @PutMapping("/students/{sid}/course/{cid}")
+    @PutMapping("/students/{sid}/courses/{cid}")
     public ResponseEntity<Student> AssignCourseToStudent(@PathVariable(name = "sid") Integer stu_id, @PathVariable(name = "cid") Integer cour_id) throws ResourceNotFoundException {
         Student student1 = this.studentRepository.findById(stu_id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + stu_id));
@@ -113,17 +113,5 @@ public class StudentController {
 
     }
 
-//    @PutMapping("/students/{stud_id}/course/{cour_id}")
-//    public ResponseEntity<Student> RemoveCourseToStudent(@PathVariable(name = "stud_id") Integer stu_id, @PathVariable(name = "cour_id") Integer cour_id) throws ResourceNotFoundException {
-//        Student student1 = this.studentRepository.findById(stu_id)
-//                .orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + stu_id));
-//
-//        Course course1 = this.courseRepository.findById(cour_id)
-//                .orElseThrow(() -> new ResourceNotFoundException("Course not found this UUID ::" + cour_id));
-//
-//        student1.getCourse().remove(course1);
-//
-//        return ResponseEntity.ok(this.studentRepository.save(student1));
-//
-//    }
+
 }

@@ -85,7 +85,6 @@ public class StudentController {
         return  respoce;
     }
 
-
     @PostMapping("/students/{stud_id}/courses/{cour_id}")
 
     public ResponseEntity<StudentDTO> AssignCourseToStudent(@PathVariable(name = "stud_id") Integer stu_id, @PathVariable(name = "cour_id") Integer cour_id) throws ResourceNotFoundException {
@@ -96,13 +95,11 @@ public class StudentController {
 
     }
 
-
     @DeleteMapping("/students/{stud_id}/assign_course/{cour_id}")
     public ResponseEntity<StudentDTO> removeCourseFromStudent(@PathVariable(name = "stud_id") Integer stu_id, @PathVariable(name = "cour_id") Integer cour_id) throws ResourceNotFoundException , CourseExistsException{
 
         StudentDTO studentDTO = this.studentServices.removeCourseFromStudent(stu_id, cour_id);
         return ResponseEntity.ok().body(studentDTO);
     }
-
 
 }

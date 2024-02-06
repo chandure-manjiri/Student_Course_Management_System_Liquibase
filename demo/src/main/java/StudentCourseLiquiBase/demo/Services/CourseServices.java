@@ -73,7 +73,7 @@ public class CourseServices {
 
     public AllCourseDTO updateCourse(CourseCreationDTO courseCreationDTO, Integer id) throws ResourceNotFoundException{
         Course course = this.courseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Course not found this UUID ::" + id));
-        course = convertToEntityUpdate(courseCreationDTO);
+        this.courseMapper.updateEntity(courseCreationDTO, course);
       //  course = course1;
         this.courseRepository.save(course);
 
@@ -126,9 +126,7 @@ public class CourseServices {
 
     }
 
-    public Course convertToEntityUpdate(CourseCreationDTO courseCreationDTO){
-        return courseMapper.convertToEntityUpdate(courseCreationDTO);
-    }
+
 
 
 }

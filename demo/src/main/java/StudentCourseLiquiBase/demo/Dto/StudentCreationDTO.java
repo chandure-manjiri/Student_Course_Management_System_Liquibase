@@ -17,11 +17,9 @@ import java.util.Set;
 
 public class StudentCreationDTO {
 
-    private Integer id;
+
     @NotBlank(message = "Full name can't be blank")
     private String fullName;
-//    @NotBlank(message = "Last name can't be blank")
-//    private String LastName;
     @NotNull(message = "Message can't be null")
     private String gender;
     @Min(15)

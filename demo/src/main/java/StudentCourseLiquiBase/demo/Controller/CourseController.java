@@ -3,6 +3,7 @@ package StudentCourseLiquiBase.demo.Controller;
 
 import StudentCourseLiquiBase.demo.Dto.*;
 import StudentCourseLiquiBase.demo.Services.CourseServices;
+import StudentCourseLiquiBase.demo.exception.CourseExistsException;
 import StudentCourseLiquiBase.demo.exception.ResourceNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,7 @@ public class CourseController {
 
 
     @GetMapping("/courses/{id}/students")
+
     public ResponseEntity<Set<StudentNameDto>> getStudentsByCourseId(@PathVariable(name = "id") Integer id) throws ResourceNotFoundException {
 
         Set<StudentNameDto> studentSet = this.courseServices.getAllStudents(id);
@@ -72,12 +74,10 @@ public class CourseController {
     }
 
 
-        @PutMapping("/courses/{cid}/students/{sid}")
-
-    public ResponseEntity<AllCourseDTO> RemoveCourseFromStudent(@PathVariable(name = "sid") Integer sid, @PathVariable(name = "cid") Integer cid) throws ResourceNotFoundException {
-         AllCourseDTO allCourseDTO = this.courseServices.removeStudentFromCourse(sid,cid);
-
-        return ResponseEntity.ok().body(allCourseDTO);
+    @DeleteMapping("/courses/{cid}/student/{sid}")
+    public ResponseEntity<AllCourseDTO> RemoveCourseFromStudent(@PathVariable(name = "cid") Integer cid, @PathVariable(name = "sid") Integer sid) throws ResourceNotFoundException , CourseExistsException {
+         AllCourseDTO allCourseDTO = this.courseServices.removeStudentFromCourse(cid, sid);
+         return ResponseEntity.ok().body(allCourseDTO);
 
     }
 

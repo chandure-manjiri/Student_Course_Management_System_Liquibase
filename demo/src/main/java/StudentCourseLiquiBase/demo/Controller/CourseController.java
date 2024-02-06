@@ -78,7 +78,7 @@ public class CourseController {
     }
 
     @DeleteMapping("/courses/{id}")
-    public Map<String, Boolean> deleteStudent(@PathVariable (value = "id") Integer id) throws ResourceNotFoundException {
+    public Map<String, Boolean> deleteCourse(@PathVariable (value = "id") Integer id) throws ResourceNotFoundException {
 
 
         Course course = this.courseRepository.findById(id).orElseThrow( ()-> new ResourceNotFoundException("Course not found by id :: "+ id));

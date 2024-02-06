@@ -20,9 +20,14 @@ public class Course {
     @Column(name = "name",nullable = false, unique = true)
     private String Name;
 
+//
+//<<<<<<< HEAD
+//    @ManyToMany(mappedBy = "course", fetch = FetchType.LAZY)
+//    @JsonIgnore
+//=======
 
     @ManyToMany(mappedBy = "course", fetch = FetchType.LAZY)
-    @JsonIgnore
+
     private Set<Student> student;
 
 

@@ -2,11 +2,15 @@ package StudentCourseLiquiBase.demo.Controller;
 
 
 
+import StudentCourseLiquiBase.demo.Dto.StudentCreationDTO;
+import StudentCourseLiquiBase.demo.Dto.StudentDTO;
 import StudentCourseLiquiBase.demo.Entity.Course;
 import StudentCourseLiquiBase.demo.Entity.Student;
 import StudentCourseLiquiBase.demo.Repository.CourseRepository;
 import StudentCourseLiquiBase.demo.Repository.StudentRepository;
+import StudentCourseLiquiBase.demo.Services.StudentServices;
 import StudentCourseLiquiBase.demo.exception.ResourceNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +29,15 @@ public class StudentController {
     @Autowired
     private CourseRepository courseRepository;
 
+    @Autowired
+    private StudentServices studentServices;
+
     //get all student
     @GetMapping("/students")
-    public ResponseEntity<List<Student>> getStudents(){
+    public ResponseEntity<List<StudentDTO>> getStudents(){
 
         try{
-            List<Student> studentList = this.studentRepository.findAll();
+            List<StudentDTO> studentList = this.studentServices.getAllStudents();
             return ResponseEntity.ok(studentList);
         }
         catch (Exception e){
@@ -40,49 +47,26 @@ public class StudentController {
 
     //get student by id
     @GetMapping("/students/{id}")
-    public ResponseEntity<Student> getStudentById(@PathVariable(name = "id") Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<StudentDTO> getStudentById(@PathVariable(name = "id") Integer id) throws ResourceNotFoundException {
 
-        Student student1 = this.studentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + id));
-
+        StudentDTO student1 = studentServices.getStudentByID(id);
         return ResponseEntity.ok().body(student1);
 
     }
 
     //add new student
     @PostMapping("/students")
-    public ResponseEntity<Student> createStudent(@RequestBody Student student) throws ResourceNotFoundException{
-        Student student1 = student;
-        Set<Course> tempcourselist = student.getCourse();
-        Set<Course> tempcourselist2 = new HashSet<>();
-        student1.setCourse(tempcourselist2);
-        for(Course tempcourse : tempcourselist){
-            int cid = tempcourse.getId();
-            System.out.println("cid:"+cid);
-            Course validcourse = this.courseRepository.findById(cid).orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + cid));
-            student1.getCourse().add(validcourse);
-        }
-        this.studentRepository.save(student1);
-        return new ResponseEntity<>(student1, HttpStatus.CREATED);
-
+    public ResponseEntity<StudentDTO> createStudent(@Valid @RequestBody StudentCreationDTO student) throws ResourceNotFoundException{
+         StudentDTO studentDTO = studentServices.createStudent(student);
+        return new ResponseEntity<>(studentDTO, HttpStatus.CREATED);
     }
-
-
 
     //update student
     @PutMapping("/students/{id}")
-    public ResponseEntity<Student> updateStudent(@RequestBody Student student, @PathVariable(name = "id") Integer stu_id) throws ResourceNotFoundException {
-        Student student1 = this.studentRepository.findById(stu_id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + stu_id));
+    public ResponseEntity<StudentCreationDTO> updateStudent(@Valid @RequestBody StudentCreationDTO student, @PathVariable(name = "id") Integer stu_id) throws ResourceNotFoundException {
 
-        student1.setFirstName(student.getFirstName());
-        student1.setLastName(student.getLastname());
-        student1.setAge(student.getAge());
-        student1.setGender(student.getGender());
-        student1.setPhoneNumber(student.getPhoneNumber());
-        student1.setCourse(student.getCourse());
-
-        return ResponseEntity.ok(this.studentRepository.save(student1));
+        StudentCreationDTO studentCreationDTO = this.studentServices.updateStudent(student, stu_id);
+        return ResponseEntity.ok().body(studentCreationDTO);
 
 
     }
@@ -91,26 +75,26 @@ public class StudentController {
     public Map<String, Boolean> deleteStudent(@PathVariable (value = "id") Integer id) throws ResourceNotFoundException {
 
 
-        Student student1 = this.studentRepository.findById(id).orElseThrow( ()-> new ResourceNotFoundException("studnet not found by id :: "+ id));
-
-        this.studentRepository.deleteById(id);
+        this.studentServices.removeStudent(id);
         Map<String, Boolean> respoce = new HashMap<>();
         respoce.put("deleted", Boolean.TRUE);
         return  respoce;
     }
 
-    @PutMapping("/students/{sid}/courses/{cid}")
-    public ResponseEntity<Student> AssignCourseToStudent(@PathVariable(name = "sid") Integer stu_id, @PathVariable(name = "cid") Integer cour_id) throws ResourceNotFoundException {
+//<<<<<<< HEAD
+//    @PutMapping("/students/{sid}/courses/{cid}")
+//    public ResponseEntity<Student> AssignCourseToStudent(@PathVariable(name = "sid") Integer stu_id, @PathVariable(name = "cid") Integer cour_id) throws ResourceNotFoundException {
+//=======
+
+    @PostMapping("/students/{stud_id}/courses/{cour_id}")
+    public ResponseEntity<StudentDTO> AssignCourseToStudent(@PathVariable(name = "stud_id") Integer stu_id, @PathVariable(name = "cour_id") Integer cour_id) throws ResourceNotFoundException {
+
         Student student1 = this.studentRepository.findById(stu_id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + stu_id));
 
-        Course course1 = this.courseRepository.findById(cour_id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + cour_id));
 
-        student1.getCourse().add(course1);
-
-        return ResponseEntity.ok(this.studentRepository.save(student1));
-
+        StudentDTO studentDTO = this.studentServices.assignCourseToStudent(stu_id, cour_id);
+        return ResponseEntity.ok().body(studentDTO);
     }
 
 

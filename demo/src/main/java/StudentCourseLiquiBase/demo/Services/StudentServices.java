@@ -1,12 +1,17 @@
 package StudentCourseLiquiBase.demo.Services;
 
-import StudentCourseLiquiBase.demo.Dto.CourseDTO;
+
 import StudentCourseLiquiBase.demo.Dto.StudentCreationDTO;
 import StudentCourseLiquiBase.demo.Dto.StudentDTO;
 import StudentCourseLiquiBase.demo.Entity.Course;
 import StudentCourseLiquiBase.demo.Entity.Student;
 import StudentCourseLiquiBase.demo.Repository.CourseRepository;
 import StudentCourseLiquiBase.demo.Repository.StudentRepository;
+import StudentCourseLiquiBase.demo.Dto.StudentUpdateDTO;
+import StudentCourseLiquiBase.demo.MapStruct.CourseMapper;
+import StudentCourseLiquiBase.demo.MapStruct.StudentCreateMapper;
+import StudentCourseLiquiBase.demo.MapStruct.StudentMapper;
+import StudentCourseLiquiBase.demo.exception.CourseExistsException;
 import StudentCourseLiquiBase.demo.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,11 +25,32 @@ import java.util.Set;
 @Service
 public class StudentServices {
 
+
+     private StudentMapper studentMapper;
+
+     private StudentCreateMapper studentCreateMapper;
+
+     private CourseMapper courseMapper;
      @Autowired
-        private StudentRepository studentRepository;
+     public void StudentMapperService(StudentMapper studentMapper){
+         this.studentMapper = studentMapper;
+     }
 
      @Autowired
-        private CourseRepository courseRepository;
+     public void CourseMapperService(CourseMapper courseMapper){
+         this.courseMapper = courseMapper;
+     }
+
+    @Autowired
+    public void StudentCreateMapperService(StudentCreateMapper studentCreateMapper){
+        this.studentCreateMapper = studentCreateMapper;
+    }
+
+    @Autowired
+    private StudentRepository studentRepository;
+
+     @Autowired
+     private CourseRepository courseRepository;
 
      public List<StudentDTO> getAllStudents(){
          List<StudentDTO> studentList = this.studentRepository.findAll().stream().
@@ -32,6 +58,11 @@ public class StudentServices {
 
          return studentList;
      }
+
+    private StudentDTO convertToDTO(Student student) {
+        return studentMapper.convertToDTO(student);
+    }
+
 
     public StudentDTO getStudentByID(Integer id) throws ResourceNotFoundException {
         Student student = this.studentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + id));
@@ -56,33 +87,19 @@ public class StudentServices {
         return convertToDTO(student);
     }
 
-    public StudentCreationDTO updateStudent(StudentCreationDTO studentCreationDTO, Integer id) throws ResourceNotFoundException{
-            Student student = this.studentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + id));
-          //  Student student1 = convertToEntity(studentCreationDTO);
+    public Student convertToEntity(StudentCreationDTO studentDTO) throws ResourceNotFoundException{
+         return studentMapper.convertToEntity(studentDTO);
+    }
 
-            student.setGender(studentCreationDTO.getGender());
-            student.setAge(studentCreationDTO.getAge());
-            student.setLastName(studentCreationDTO.getLastName());
-            student.setFirstName(studentCreationDTO.getFirstName());
-            student.setPhoneNumber(studentCreationDTO.getPhoneNumber());
 
-           // Set<CourseDTO> cdt = new HashSet<>();
-            Set<CourseDTO> cdt1 = studentCreationDTO.getCourse();
+    public StudentCreationDTO updateStudent(StudentUpdateDTO studentUpdateDTO, Integer id) throws ResourceNotFoundException{
 
-            Set<Course> tempcourselist = new HashSet<>();
-            // course dto to course
-            for(CourseDTO courseDTO : cdt1){
-                Integer cid = courseDTO.getId();
-                Course validcourse = this.courseRepository.findById(cid).orElseThrow(() -> new ResourceNotFoundException("Course not found this UUID ::" + cid));
-                tempcourselist.add(validcourse);
-            }
-            student.setCourse(tempcourselist);
-            //student.setCourse(studentCreationDTO.getCourse());
-
-            this.studentRepository.save(student);
+          Student student = this.studentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + id));
+          studentMapper.updateEntity(studentUpdateDTO, student);
+          this.studentRepository.save(student);
 
             StudentCreationDTO studentCreationDTO1 = convertToCDTO(student);
-
+            studentCreationDTO1.setFullName(studentCreateMapper.convertToFullName(student));
             return  studentCreationDTO1;
 
     }
@@ -99,68 +116,42 @@ public class StudentServices {
         Course course1 = this.courseRepository.findById(cour_id)
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found this UUID ::" + cour_id));
 
-
-        student1.getCourse().add(course1);
-        studentRepository.save(student1);
-        return convertToDTO(student1);
+            if(isCourseExists(course1, student1)){
+                throw new CourseExistsException("This course is already assigned with student");
+            }
+            else{
+                student1.getCourse().add(course1);
+                studentRepository.save(student1);
+                return convertToDTO(student1);
+            }
     }
-     public Student convertToEntity(StudentCreationDTO studentDTO) throws ResourceNotFoundException{
-         Student student = new Student();
-         student.setId(studentDTO.getId());
-         student.setAge(studentDTO.getAge());
-         student.setGender(studentDTO.getGender());
-         student.setFirstName(studentDTO.getFirstName());
-         student.setLastName(studentDTO.getLastName());
-         student.setPhoneNumber(studentDTO.getPhoneNumber());
 
-         Set<Course> tempCourseSet = new HashSet<>();
-         for(CourseDTO courseDTO : studentDTO.getCourse()){
-             Course course1 = this.courseRepository.findById(courseDTO.getId()).orElseThrow(() -> new ResourceNotFoundException("Course not found this UUID ::" + courseDTO.getId()));
-             tempCourseSet.add(course1);
-         }
 
-         student.setCourse(tempCourseSet);
-         return student;
+    public StudentDTO removeCourseFromStudent(Integer sid, Integer cid) throws ResourceNotFoundException{
+        Course course = this.courseRepository.findById(cid).orElseThrow(() -> new ResourceNotFoundException("Course not found this UUID ::" + cid));
+        Student student = this.studentRepository.findById(sid).orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + sid));
 
+        if(!isCourseExists(course, student)){
+            throw new CourseExistsException("This course is already removed from student");
+        }
+        else{
+            student.getCourse().remove(course);
+            this.studentRepository.save(student);
+            return convertToDTO(student);
+        }
      }
-     public StudentDTO convertToDTO(Student student){
+     //exception method
 
-         StudentDTO studentDTO = new StudentDTO();
-         studentDTO.setId(student.getId());
-         studentDTO.setFirstName(student.getFirstName());
-         studentDTO.setLastName(student.getLastname());
-         studentDTO.setGender(student.getGender());
-         studentDTO.setCourseList(new HashSet<CourseDTO>());
-         for(Course course : student.getCourse()){
-             CourseDTO courseDTO = new CourseDTO();
-             courseDTO.setId(course.getId());
-             courseDTO.setName(course.getName());
-             studentDTO.getCourseList().add(courseDTO);
-         }
-
-       return studentDTO;
-
-     }
+    private boolean isCourseExists(Course course, Student student){
+        return student.getCourse().contains(course);
+    }
 
     public StudentCreationDTO convertToCDTO(Student student){
 
-        StudentCreationDTO studentDTO = new StudentCreationDTO();
-        studentDTO.setId(student.getId());
-        studentDTO.setFirstName(student.getFirstName());
-        studentDTO.setLastName(student.getLastname());
-        studentDTO.setGender(student.getGender());
-        studentDTO.setPhoneNumber(student.getPhoneNumber());
-        studentDTO.setAge(student.getAge());
-        studentDTO.setCourse(new HashSet<CourseDTO>());
-        for(Course course : student.getCourse()){
-            CourseDTO courseDTO = new CourseDTO();
-            courseDTO.setId(course.getId());
-            courseDTO.setName(course.getName());
-            studentDTO.getCourse().add(courseDTO);
-        }
-
+        StudentCreationDTO studentDTO = studentMapper.convertToCDTO(student);
         return studentDTO;
 
     }
+
 
 }

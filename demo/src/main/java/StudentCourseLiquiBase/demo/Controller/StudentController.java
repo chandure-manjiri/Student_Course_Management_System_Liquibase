@@ -4,11 +4,16 @@ package StudentCourseLiquiBase.demo.Controller;
 
 import StudentCourseLiquiBase.demo.Dto.StudentCreationDTO;
 import StudentCourseLiquiBase.demo.Dto.StudentDTO;
+
+import StudentCourseLiquiBase.demo.Dto.StudentUpdateDTO;
 import StudentCourseLiquiBase.demo.Entity.Course;
 import StudentCourseLiquiBase.demo.Entity.Student;
 import StudentCourseLiquiBase.demo.Repository.CourseRepository;
 import StudentCourseLiquiBase.demo.Repository.StudentRepository;
 import StudentCourseLiquiBase.demo.Services.StudentServices;
+
+import StudentCourseLiquiBase.demo.exception.CourseExistsException;
+
 import StudentCourseLiquiBase.demo.exception.ResourceNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,12 +68,10 @@ public class StudentController {
 
     //update student
     @PutMapping("/students/{id}")
-    public ResponseEntity<StudentCreationDTO> updateStudent(@Valid @RequestBody StudentCreationDTO student, @PathVariable(name = "id") Integer stu_id) throws ResourceNotFoundException {
+    public ResponseEntity<StudentCreationDTO> updateStudent(@Valid @RequestBody StudentUpdateDTO student, @PathVariable(name = "id") Integer stu_id) throws ResourceNotFoundException {
 
         StudentCreationDTO studentCreationDTO = this.studentServices.updateStudent(student, stu_id);
         return ResponseEntity.ok().body(studentCreationDTO);
-
-
     }
 
     @DeleteMapping("/students/{id}")
@@ -81,19 +84,17 @@ public class StudentController {
         return  respoce;
     }
 
-//<<<<<<< HEAD
-//    @PutMapping("/students/{sid}/courses/{cid}")
-//    public ResponseEntity<Student> AssignCourseToStudent(@PathVariable(name = "sid") Integer stu_id, @PathVariable(name = "cid") Integer cour_id) throws ResourceNotFoundException {
-//=======
-
     @PostMapping("/students/{stud_id}/courses/{cour_id}")
     public ResponseEntity<StudentDTO> AssignCourseToStudent(@PathVariable(name = "stud_id") Integer stu_id, @PathVariable(name = "cour_id") Integer cour_id) throws ResourceNotFoundException {
-
-        Student student1 = this.studentRepository.findById(stu_id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + stu_id));
-
-
         StudentDTO studentDTO = this.studentServices.assignCourseToStudent(stu_id, cour_id);
+        return ResponseEntity.ok().body(studentDTO);
+    }
+
+
+    @DeleteMapping("/students/{stud_id}/assign_course/{cour_id}")
+    public ResponseEntity<StudentDTO> removeCourseFromStudent(@PathVariable(name = "stud_id") Integer stu_id, @PathVariable(name = "cour_id") Integer cour_id) throws ResourceNotFoundException , CourseExistsException{
+
+        StudentDTO studentDTO = this.studentServices.removeCourseFromStudent(stu_id, cour_id);
         return ResponseEntity.ok().body(studentDTO);
     }
 

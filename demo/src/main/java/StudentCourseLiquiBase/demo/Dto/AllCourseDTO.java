@@ -14,6 +14,5 @@ import java.util.Set;
 public class AllCourseDTO {
     private Integer id;
     private String name;
-
-    private Set<String> studentName;
+    private Set<StudentNameDto> studentName;
 }

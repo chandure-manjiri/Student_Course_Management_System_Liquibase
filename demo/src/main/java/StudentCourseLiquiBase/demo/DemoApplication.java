@@ -6,7 +6,11 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
+//<<<<<<< HEAD
+//
+//=======
+//import org.springframework.context.annotation.ComponentScan;
+//>>>>>>> feature/mapstruct
 @OpenAPIDefinition(
 		info = @Info(
 				title = "Student Course Management System",
@@ -24,7 +28,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 		)
 )
 @SpringBootApplication
-public class DemoApplication {
+//@ComponentScan("StudentCourseLiquiBase.demo.MapStruct")
+ public class DemoApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);

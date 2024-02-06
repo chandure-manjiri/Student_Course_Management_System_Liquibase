@@ -24,6 +24,7 @@ public class Student {
     private String gender;
     @Column(name = "age",nullable = true)
     private Integer age;
+
     @Column(name = "phonenumber",nullable = true, length = 10)
     private String phone;
 

@@ -16,8 +16,6 @@ public interface StudentMapper {
     @Mapping(source = "lastname", target = "lastName")
     @Mapping(source = "id", target = "id")
     StudentNameDto convertToStudentNameDto(Student student);
-//    @Mapping(source = "student", target = "studentName")
-
     Set<StudentNameDto> convertToStudentList(Set<Student> students);
     @Mapping(source = "lastname", target = "lastName")
     @Mapping(source = "course", target = "courseList")

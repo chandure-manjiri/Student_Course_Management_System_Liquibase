@@ -11,7 +11,7 @@ import org.mapstruct.Named;
 import java.util.Set;
 
 
-@Mapper(componentModel = "spring", uses = CourseMapper.class)
+@Mapper(componentModel = "spring")
 public interface StudentMapper {
     @Mapping(source = "lastname", target = "lastName")
     @Mapping(source = "id", target = "id")

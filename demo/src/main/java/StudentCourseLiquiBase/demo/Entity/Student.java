@@ -2,6 +2,7 @@ package StudentCourseLiquiBase.demo.Entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Set;
 
 
@@ -33,13 +34,15 @@ public class Student {
         inverseJoinColumns = @JoinColumn(name = "cid"))
     private Set<Course> course;
 
+    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Address> addressList;
 
 
     public Student(){
         super();
     }
 
-    public Student(String firstName, String lastName, String gender, int age, String phone, Set<Course> cource){
+    public Student(String firstName, String lastName, String gender, int age, String phone, Set<Course> cource, List<Address> addressList){
         super();
         this.firstName = firstName;
         this.lastName = lastName;
@@ -47,6 +50,7 @@ public class Student {
         this.age = age;
         this.phone = phone;
         this.course = cource;
+        this.addressList = addressList;
     }
 
     public Integer getId(){
@@ -110,6 +114,14 @@ public class Student {
 
     public void  setCourse(Set<Course> course){
         this.course = course;
+    }
+
+    public List<Address> getAddressList(){
+        return this.addressList;
+    }
+
+    public void  setAddressList(List<Address> addressList){
+        this.addressList = addressList;
     }
 
 }

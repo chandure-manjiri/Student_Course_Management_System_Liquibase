@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="value added in addresses" author="manjiri">
+        <comment>Inserting addresses</comment>
+
+        <insert tableName="addresses">
+            <column name="flat" valueNumeric="32"/>
+            <column name="area" value="warhade nagar"/>
+            <column name="city" value="dhamangaon rly"/>
+            <column name="pin" valueNumeric="444709"/>
+            <column name="state" value="maharashtra"/>
+            <column name="country" value="india"/>
+            <column name="sid" valueNumeric ="35"/>
+        </insert>
+        <insert tableName="addresses">
+            <column name="flat" valueNumeric="25"/>
+            <column name="area" value="girls hostel, walchand college"/>
+            <column name="city" value="sangli"/>
+            <column name="pin" valueNumeric="416415"/>
+            <column name="state" value="maharashtra"/>
+            <column name="country" value="india"/>
+            <column name="sid" valueNumeric ="35"/>
+        </insert>
+
+
+
+    </changeSet>
+</databaseChangeLog>

@@ -15,24 +15,25 @@ import lombok.Setter;
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
 
-    @Column(nullable = false)
-    private Integer flatNumber;
+    @Column(name = "flat",nullable = true)
+    private Integer flat;
 
-    @Column(nullable = false)
+    @Column(name = "area",nullable = false)
     private String area;
 
-    @Column(nullable = false)
+    @Column(name = "city",nullable = false)
     private String city;
 
-    @Column(nullable = false)
+    @Column(name = "pin",nullable = true)
     private Integer pin;
 
-    @Column(nullable = false)
+    @Column(name = "state",nullable = false)
     private String state;
 
-    @Column(nullable = false)
+    @Column(name = "country",nullable = false)
     private String country;
 
     @ManyToOne(cascade = CascadeType.ALL)

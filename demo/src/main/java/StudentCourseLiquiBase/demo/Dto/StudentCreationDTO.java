@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -29,4 +30,5 @@ public class StudentCreationDTO {
     @Pattern(regexp="^\\d{10}$", message = "Ivalid number, enter 10 digit only")
     private String phoneNumber;
     private Set<CourseDTO> course;
+    private List<AddressDTO> addressDTOList;
 }

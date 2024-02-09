@@ -36,7 +36,7 @@ public class Address {
     @Column(name = "country",nullable = false)
     private String country;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne( cascade = CascadeType.REMOVE)
     @JoinColumn(name = "sid")
     private Student student;
 }

@@ -116,12 +116,5 @@ public class Student {
         this.course = course;
     }
 
-    public List<Address> getAddressList(){
-        return this.addressList;
-    }
-
-    public void  setAddressList(List<Address> addressList){
-        this.addressList = addressList;
-    }
 
 }

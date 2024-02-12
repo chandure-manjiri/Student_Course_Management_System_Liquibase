@@ -30,5 +30,5 @@ public class StudentCreationDTO {
     @Pattern(regexp="^\\d{10}$", message = "Ivalid number, enter 10 digit only")
     private String phoneNumber;
     private Set<CourseDTO> course;
-    private List<AddressDTO> addressDTOList;
+
 }

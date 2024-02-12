@@ -4,6 +4,7 @@ import StudentCourseLiquiBase.demo.Dto.CourseDTO;
 import StudentCourseLiquiBase.demo.Dto.StudentCreationDTO;
 import StudentCourseLiquiBase.demo.Dto.StudentDTO;
 import StudentCourseLiquiBase.demo.Dto.StudentUpdateDTO;
+import StudentCourseLiquiBase.demo.Entity.Address;
 import StudentCourseLiquiBase.demo.Entity.Course;
 import StudentCourseLiquiBase.demo.Entity.Student;
 import StudentCourseLiquiBase.demo.MapStruct.CourseMapper;
@@ -78,6 +79,16 @@ public class StudentServices {
             Course validcourse = this.courseRepository.findById(cid).orElseThrow(() -> new ResourceNotFoundException("Course not found this UUID ::" + cid));
             student.getCourse().add(validcourse);
         }
+
+        for(Address address : student.getAddressList()){
+            if(address.getId() == null){
+                  address.setStudent(student);
+            }
+            else{ // throw error here can't update address, can't pass address id
+                throw new CourseExistsException("only able to create new address, can't update address");
+            }
+        }
+
         this.studentRepository.save(student);
         return convertToDTO(student);
     }

@@ -182,32 +182,35 @@ public class StudentServices {
     }
 
     public StudentDTO updateStudentAddress(StudentCreationDTO studentCreationDTO, Integer sid) throws ResourceNotFoundException{
-         Student student = convertToEntity(studentCreationDTO);
-         Student student1 = studentRepository.findById(sid).orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + sid));
+         Student inputStudent = convertToEntity(studentCreationDTO);
+         Student existingStudent = studentRepository.findById(sid).orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + sid));
 
-
-         for(Address address : student.getAddressList()){
-            if(address.getId() == null){
-                address.setStudent(student1);
-                student1.getAddressList().add(address);
-            }
-            else{
-                int val = 0;
-                for(Address address1 : student1.getAddressList()){
-                    if(address1.getId() == address.getId()){
-                        this.addressMapper.updateAddress(address, address1);
-                        address1.setStudent(student1);
-                        val = 1;
-                    }
-                }
-                if(val == 0){ // not found
-                  throw new CourseExistsException("this address is invalid for update, not exists or not for this student");
-                }
-            }
+        this.studentMapper.updateCreationEntity(studentCreationDTO,existingStudent);
+         if(inputStudent.getAddressList() != null) {
+             for (Address inputAddress : inputStudent.getAddressList()) {
+                 if (inputAddress.getId() == null) {  // address sid not updated
+                     inputAddress.setStudent(existingStudent);
+                     existingStudent.getAddressList().add(inputAddress);
+                 } else {
+                     int val = 0;
+                     if (existingStudent.getAddressList() != null) {
+                         for (Address existingAddress : existingStudent.getAddressList()) {
+                             if (existingAddress.getId() == inputAddress.getId()) {
+                                 this.addressMapper.updateAddress(inputAddress, existingAddress);
+                                 existingAddress.setStudent(existingStudent);
+                                 val = 1;
+                             }
+                         }
+                     } //
+                     if (val == 0) { // not found
+                         throw new CourseExistsException("this address is invalid for update, not exists or not for this student");
+                     }
+                 }
+             }
          }
 
-        this.studentMapper.updateCreationEntity(studentCreationDTO,student1); // student address map not error may come here
-         this.studentRepository.save(student1);
-         return convertToDTO(student1);
+         // student address map not error may come here
+         this.studentRepository.save(existingStudent);
+         return convertToDTO(existingStudent);
     }
 }

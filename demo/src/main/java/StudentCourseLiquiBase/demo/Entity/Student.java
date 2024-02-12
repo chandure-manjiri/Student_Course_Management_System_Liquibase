@@ -38,7 +38,7 @@ public class Student {
         inverseJoinColumns = @JoinColumn(name = "cid"))
     private Set<Course> course;
 
-    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> addressList;
 
     public Student(){

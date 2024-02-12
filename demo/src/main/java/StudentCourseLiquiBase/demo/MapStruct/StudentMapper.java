@@ -46,10 +46,16 @@ public interface StudentMapper {
 
     @Named("toFirstName")
     default String convertToFirstName(StudentCreationDTO studentCreationDTO){
+        if (studentCreationDTO.getFullName() == null){
+            return null;
+        }
         return studentCreationDTO.getFullName().substring(0, studentCreationDTO.getFullName().indexOf(" "));
     }
     @Named("toLastName")
     default String convertToLastName(StudentCreationDTO studentCreationDTO){
+        if (studentCreationDTO.getFullName() == null){
+            return null;
+        }
         return studentCreationDTO.getFullName().substring(studentCreationDTO.getFullName().indexOf(" ") + 1);
     }
 
@@ -60,7 +66,8 @@ public interface StudentMapper {
    // @Mapping(target = "lastName", expression = "java(convertToLastNameUp(studentUpdateDTO))")
     void updateEntity(StudentUpdateDTO studentUpdateDTO, @MappingTarget Student student);
 
-    //@Mapping(target = "addressList", source = "addressDTOList", defaultExpression = "java(student.getAddressList())")
+//    @Mapping(target = "addressList", source = "addressDTOList", defaultExpression = "java(student.getAddressList())")
+    @Mapping(target = "course", source = "course", defaultExpression = "java(student.getCourse())")
     @Mapping(source = "age", target = "age", defaultExpression = "java(student.getAge())")
     @Mapping(source = "phoneNumber", target = "phoneNumber", defaultExpression = "java(student.getPhoneNumber())")
     @Mapping(source = "gender", target = "gender", defaultExpression = "java(student.getGender())")

@@ -6,7 +6,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="creating addresses table with sid null false 2" author="manjiri">
+    <changeSet id="trying for child delete if parent delete" author="manjiri">
         <createTable tableName="addresses"
                      remarks="A table to contain all addresses with students associated with address">
             <column name="id" type="SERIAL">

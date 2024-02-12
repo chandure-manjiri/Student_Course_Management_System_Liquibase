@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -37,7 +38,7 @@ public class Student {
         inverseJoinColumns = @JoinColumn(name = "cid"))
     private Set<Course> course;
 
-    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Address> addressList;
 
     public Student(){
@@ -55,6 +56,8 @@ public class Student {
         this.addressList = addressList;
     }
 
+    public String getLastname(){return this.lastName;}
+
     //phone number
     public String getPhoneNumber(){
         return this.phone;
@@ -62,6 +65,14 @@ public class Student {
 
     public void setPhoneNumber(String phoneNumber){
         this.phone = phoneNumber;
+    }
+
+    public List<Address> getAddressList(){
+        return this.addressList;
+    }
+
+    public void setAddressList(List<Address> addressList){
+        this.addressList = addressList;
     }
 
 }

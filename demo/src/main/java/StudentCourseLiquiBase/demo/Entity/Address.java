@@ -15,25 +15,27 @@ import lombok.Setter;
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "addressSequence")
+//    @SequenceGenerator(name = "addressSequence", sequenceName = "addressSequenceTable", allocationSize = 1)
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "area",nullable = false)
+    @Column(name = "area")
     private String area;
 
-    @Column(name = "city",nullable = false)
+    @Column(name = "city")
     private String city;
 
     @Column(name = "pin",nullable = true)
     private Integer pin;
 
-    @Column(name = "state",nullable = false)
+    @Column(name = "state")
     private String state;
 
-    @Column(name = "country",nullable = false)
+    @Column(name = "country")
     private String country;
 
     @ManyToOne( cascade = CascadeType.ALL)
-    @JoinColumn(table = "students",name = "sid")
+    @JoinColumn(name = "sid")
     private Student student;
 }

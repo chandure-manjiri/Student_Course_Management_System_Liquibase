@@ -2,11 +2,15 @@ package StudentCourseLiquiBase.demo.MapStruct;
 
 import StudentCourseLiquiBase.demo.Dto.AddressDTO;
 import StudentCourseLiquiBase.demo.Entity.Address;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
+@Mapper(componentModel = "spring")
 public interface AddressMapper {
+
 
     Address convertToAddressEntity(AddressDTO addressDTO);
 
@@ -16,5 +20,5 @@ public interface AddressMapper {
 
     List<AddressDTO> convertToAddressDtoList(List<Address> addressList);
 
-    void updateAddress(AddressDTO addressDTO, @MappingTarget Address address);
+    void updateAddress(Address address1, @MappingTarget Address address);
 }

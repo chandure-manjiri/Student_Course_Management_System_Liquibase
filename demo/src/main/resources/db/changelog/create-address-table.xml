@@ -6,14 +6,11 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="creating addresses table with sid null true" author="manjiri">
+    <changeSet id="creating addresses table with sid null false 2" author="manjiri">
         <createTable tableName="addresses"
                      remarks="A table to contain all addresses with students associated with address">
             <column name="id" type="SERIAL">
                 <constraints primaryKey="true"/>
-            </column>
-            <column name="flat" type="int">
-                <constraints nullable="true" unique="false"/>
             </column>
             <column name="area" type="varchar(100)">
                 <constraints nullable="false" unique="false"/>
@@ -31,7 +28,7 @@
                 <constraints nullable="false" unique="false"/>
             </column>
             <column name="sid" type="int">
-                <constraints nullable="true" unique="false"/>
+                <constraints nullable="false" unique="false"/>
             </column>
         </createTable>
 

@@ -11,7 +11,7 @@ import org.mapstruct.Named;
 import java.util.Set;
 
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = AddressMapper.class)
 public interface StudentMapper {
     @Mapping(source = "lastname", target = "lastName")
     @Mapping(source = "id", target = "id")
@@ -59,6 +59,14 @@ public interface StudentMapper {
     @Mapping(source = "fullName", target = "lastName", qualifiedByName = "toLastName", defaultExpression = "java(student.getLastname())")
    // @Mapping(target = "lastName", expression = "java(convertToLastNameUp(studentUpdateDTO))")
     void updateEntity(StudentUpdateDTO studentUpdateDTO, @MappingTarget Student student);
+
+    //@Mapping(target = "addressList", source = "addressDTOList", defaultExpression = "java(student.getAddressList())")
+    @Mapping(source = "age", target = "age", defaultExpression = "java(student.getAge())")
+    @Mapping(source = "phoneNumber", target = "phoneNumber", defaultExpression = "java(student.getPhoneNumber())")
+    @Mapping(source = "gender", target = "gender", defaultExpression = "java(student.getGender())")
+    @Mapping(source = "fullName",target = "firstName", qualifiedByName = "toFirstName", defaultExpression = "java(student.getFirstName())")
+    @Mapping(source = "fullName", target = "lastName", qualifiedByName = "toLastName", defaultExpression = "java(student.getLastname())")
+    void updateCreationEntity(StudentCreationDTO studentCreationDTO, @MappingTarget Student student);
     @Named("toFirstName")
     default String convertToFirstNameUp(String fullName){
         return fullName.substring(0, fullName.indexOf(" "));

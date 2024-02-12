@@ -12,7 +12,7 @@ public interface StudentCreateMapper {
     default String convertToFullName(Student student){
         String name = student.getFirstName();
         name += " ";
-        name += student.getLastName();
+        name += student.getLastname();
         return name;
     }
 

@@ -1,13 +1,17 @@
 package StudentCourseLiquiBase.demo.Entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.List;
 import java.util.Set;
 
 
 @Entity
 @Table(name = "students")
-
+@Getter
+@Setter
 public class Student {
 
     @Id
@@ -33,13 +37,14 @@ public class Student {
         inverseJoinColumns = @JoinColumn(name = "cid"))
     private Set<Course> course;
 
-
+    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private List<Address> addressList;
 
     public Student(){
         super();
     }
 
-    public Student(String firstName, String lastName, String gender, int age, String phone, Set<Course> cource){
+    public Student(String firstName, String lastName, String gender, int age, String phone, Set<Course> cource,  List<Address> addressList){
         super();
         this.firstName = firstName;
         this.lastName = lastName;
@@ -47,51 +52,8 @@ public class Student {
         this.age = age;
         this.phone = phone;
         this.course = cource;
+        this.addressList = addressList;
     }
-
-    public Integer getId(){
-        return this.id;
-    }
-
-    public void setId(Integer id){
-        this.id = id;
-    }
-    //lastname
-    public String getFirstName(){
-        return this.firstName;
-    }
-
-    public void setFirstName(String firstName){
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName){
-        this.lastName = lastName;
-    }
-
-    //firstname
-    public String getLastname(){
-        return this.lastName;
-    }
-
-    //gender
-    public String getGender(){
-        return this.gender;
-    }
-
-    public void setGender(String gender){
-        this.gender = gender;
-    }
-
-    //age
-    public Integer getAge(){
-        return this.age;
-    }
-
-    public void setAge(Integer age){
-        this.age = age;
-    }
-
 
     //phone number
     public String getPhoneNumber(){
@@ -100,16 +62,6 @@ public class Student {
 
     public void setPhoneNumber(String phoneNumber){
         this.phone = phoneNumber;
-    }
-
-    // course set
-
-    public Set<Course> getCourse(){
-        return this.course;
-    }
-
-    public void  setCourse(Set<Course> course){
-        this.course = course;
     }
 
 }

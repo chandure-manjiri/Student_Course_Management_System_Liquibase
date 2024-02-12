@@ -7,3 +7,5 @@ databaseChangeLog:
       file: db/changelog/insert-data-student-course.xml
   - include:
       file: db/changelog/insert-data-students.xml
+  - include:
+      file: db/changelog/create-address-table.xml

@@ -21,6 +21,7 @@ public interface StudentMapper {
     Set<StudentNameDto> convertToStudentList(Set<Student> students);
     @Mapping(source = "lastname", target = "lastName")
     @Mapping(source = "course", target = "courseList")
+    @Mapping(target = "addressDTOList", source = "addressList")
     @Mapping(source = "course",target = "numberOfCourse", qualifiedByName = "numberOfCoursesOfStudent")
     @Mapping(target = "fullName", expression = "java(convertToFullName(student.getFirstName(), student.getLastname()))")
     StudentDTO convertToDTO(Student student);
@@ -38,7 +39,7 @@ public interface StudentMapper {
     StudentCreationDTO convertToCDTO(Student student);
 
     Student entityToEntity(Student student);
-
+    @Mapping(target = "addressList", source = "addressDTOList")
    @Mapping(target = "firstName", expression = "java(convertToFirstName(studentCreationDTO))")
    @Mapping(target = "lastName", expression = "java(convertToLastName(studentCreationDTO))")
    Student convertToEntity(StudentCreationDTO studentCreationDTO);

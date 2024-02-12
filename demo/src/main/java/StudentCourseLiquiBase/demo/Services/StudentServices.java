@@ -13,6 +13,7 @@ import StudentCourseLiquiBase.demo.Repository.CourseRepository;
 import StudentCourseLiquiBase.demo.Repository.StudentRepository;
 import StudentCourseLiquiBase.demo.exception.CourseExistsException;
 import StudentCourseLiquiBase.demo.exception.ResourceNotFoundException;
+import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -139,6 +140,8 @@ public class StudentServices {
          return student;
 
      }
+
+
      public StudentDTO convertToDTO(Student student){
 
          StudentDTO studentDTO = studentMapper.convertToDTO(student);

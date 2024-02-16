@@ -32,13 +32,13 @@ public class Student {
     @Column(name = "phonenumber",nullable = true, length = 10)
     private String phone;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL) // question
     @JoinTable(name = "students_courses",
         joinColumns = @JoinColumn(name = "sid"),
         inverseJoinColumns = @JoinColumn(name = "cid"))
     private Set<Course> course;
 
-    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "student")
     private List<Address> addressList;
 
     public Student(){

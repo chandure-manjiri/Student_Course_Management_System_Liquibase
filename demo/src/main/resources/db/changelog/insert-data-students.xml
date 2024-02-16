@@ -5,29 +5,29 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
-    <changeSet id="value added in students" author="manjiri">
+    <changeSet id="parth added" author="manjiri">
         <comment>Inserting studentss</comment>
 
+<!--        <insert tableName="students">-->
+<!--            <column name="firstname" value="manjiri"/>-->
+<!--            <column name="lastname" value="chandure"/>-->
+<!--            <column name="gender" value="female"/>-->
+<!--            <column name="age" valueNumeric="21"/>-->
+<!--            <column name="phonenumber" value="9096688086"/>-->
+<!--        </insert>-->
+<!--        <insert tableName="students">-->
+<!--            <column name="firstname" value="suyash"/>-->
+<!--            <column name="lastname" value="chavan"/>-->
+<!--            <column name="gender" value="male"/>-->
+<!--            <column name="age" valueNumeric="22"/>-->
+<!--            <column name="phonenumber" value="7559487122"/>-->
+<!--        </insert>-->
         <insert tableName="students">
-            <column name="firstname" value="manjiri"/>
-            <column name="lastname" value="chandure"/>
-            <column name="gender" value="female"/>
-            <column name="age" valueNumeric="21"/>
-            <column name="phonenumber" value="9096688086"/>
-        </insert>
-        <insert tableName="students">
-            <column name="firstname" value="suyash"/>
-            <column name="lastname" value="chavan"/>
+            <column name="firstname" value="parth"/>
+            <column name="lastname" value="shah"/>
             <column name="gender" value="male"/>
-            <column name="age" valueNumeric="22"/>
-            <column name="phonenumber" value="7559487122"/>
-        </insert>
-        <insert tableName="students">
-            <column name="firstname" value="shilpa"/>
-            <column name="lastname" value="chandure"/>
-            <column name="gender" value="female"/>
-            <column name="age" valueNumeric="50"/>
-            <column name="phonenumber" value="9970306741"/>
+            <column name="age" valueNumeric="20"/>
+            <column name="phonenumber" value="9970306740"/>
         </insert>
 
     </changeSet>

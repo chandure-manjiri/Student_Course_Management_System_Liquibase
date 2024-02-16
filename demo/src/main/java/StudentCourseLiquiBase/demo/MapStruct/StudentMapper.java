@@ -1,12 +1,10 @@
 package StudentCourseLiquiBase.demo.MapStruct;
 
 import StudentCourseLiquiBase.demo.Dto.*;
+import StudentCourseLiquiBase.demo.Entity.Address;
 import StudentCourseLiquiBase.demo.Entity.Course;
 import StudentCourseLiquiBase.demo.Entity.Student;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.Named;
+import org.mapstruct.*;
 
 import java.util.Set;
 
@@ -44,6 +42,7 @@ public interface StudentMapper {
    @Mapping(target = "lastName", expression = "java(convertToLastName(studentCreationDTO))")
    Student convertToEntity(StudentCreationDTO studentCreationDTO);
 
+
     @Named("toFirstName")
     default String convertToFirstName(StudentCreationDTO studentCreationDTO){
         if (studentCreationDTO.getFullName() == null){
@@ -66,14 +65,7 @@ public interface StudentMapper {
    // @Mapping(target = "lastName", expression = "java(convertToLastNameUp(studentUpdateDTO))")
     void updateEntity(StudentUpdateDTO studentUpdateDTO, @MappingTarget Student student);
 
-//    @Mapping(target = "addressList", source = "addressDTOList", defaultExpression = "java(student.getAddressList())")
-    @Mapping(target = "course", source = "course", defaultExpression = "java(student.getCourse())")
-    @Mapping(source = "age", target = "age", defaultExpression = "java(student.getAge())")
-    @Mapping(source = "phoneNumber", target = "phoneNumber", defaultExpression = "java(student.getPhoneNumber())")
-    @Mapping(source = "gender", target = "gender", defaultExpression = "java(student.getGender())")
-    @Mapping(source = "fullName",target = "firstName", qualifiedByName = "toFirstName", defaultExpression = "java(student.getFirstName())")
-    @Mapping(source = "fullName", target = "lastName", qualifiedByName = "toLastName", defaultExpression = "java(student.getLastname())")
-    void updateCreationEntity(StudentCreationDTO studentCreationDTO, @MappingTarget Student student);
+
     @Named("toFirstName")
     default String convertToFirstNameUp(String fullName){
         return fullName.substring(0, fullName.indexOf(" "));
@@ -82,7 +74,22 @@ public interface StudentMapper {
     default String convertToLastNameUp(String fullName){
         return fullName.substring(fullName.indexOf(" ") + 1);
     }
-
+   // @Mapping(target = "addressList", source = "addressDTOList", qualifiedByName = "toUpdateAddressList",defaultExpression = "java(student.getAddressList())")
+   @Mapping(target = "addressList", source = "addressDTOList", defaultExpression = "java(student.getAddressList())")
+   @Mapping(target = "course", source = "course", defaultExpression = "java(existingStudent.getCourse())")
+    @Mapping(source = "age", target = "age", defaultExpression = "java(existingStudent.getAge())")
+    @Mapping(source = "phoneNumber", target = "phoneNumber", defaultExpression = "java(existingStudent.getPhoneNumber())")
+    @Mapping(source = "gender", target = "gender", defaultExpression = "java(existingStudent.getGender())")
+    @Mapping(source = "fullName",target = "firstName", defaultExpression = "java(existingStudent.getFirstName())")
+    @Mapping(source = "fullName", target = "lastName",  defaultExpression = "java(existingStudent.getLastname())")
+    void updateStudentEntity(StudentCreationDTO inputStudent, @MappingTarget Student existingStudent);
+    @AfterMapping
+    default void setStudentToAddress(StudentCreationDTO inputStudent, @MappingTarget Student existingStudent){
+        for(Address address : existingStudent.getAddressList()){
+            address.setStudent(existingStudent);
+        }
+    }
 
 }
+
 

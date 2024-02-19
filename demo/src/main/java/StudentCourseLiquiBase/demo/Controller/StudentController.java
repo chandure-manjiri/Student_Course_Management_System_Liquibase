@@ -67,6 +67,14 @@ public class StudentController {
         return new ResponseEntity<>(studentDTO, HttpStatus.CREATED);
     }
 
+    @PostMapping("/students/{id}")
+    public ResponseEntity<StudentDTO> updateStudentAddress(@Valid @RequestBody StudentCreationDTO student, @PathVariable (name = "id") Integer sid) throws ResourceNotFoundException{
+        StudentDTO studentDTO = studentServices.updateStudentAddress(student, sid);
+        return new ResponseEntity<>(studentDTO, HttpStatus.CREATED);
+    }
+
+
+
     //update student
     @PutMapping("/students/{id}")
     public ResponseEntity<StudentCreationDTO> updateStudent(@Valid @RequestBody StudentUpdateDTO student, @PathVariable(name = "id") Integer stu_id) throws ResourceNotFoundException {

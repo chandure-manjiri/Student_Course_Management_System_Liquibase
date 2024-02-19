@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+
+    <changeSet id="trying for child delete if parent delete 2" author="manjiri">
+        <createTable tableName="addresses"
+                     remarks="A table to contain all addresses with students associated with address">
+            <column name="id" type="SERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="area" type="varchar(100)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="city" type="varchar(100)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="pin" type="int">
+                <constraints nullable="true" unique="false"/>
+            </column>
+            <column name="state" type="varchar(100)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="country" type="varchar(100)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="sid" type="int">
+                <constraints nullable="false" unique="false"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+
+    <changeSet  author="liquibase-docs"  id="dropNotNullConstraint-example-2 -2">
+        <dropNotNullConstraint  columnName="sid"
+                                tableName="addresses"/>
+    </changeSet>
+</databaseChangeLog>

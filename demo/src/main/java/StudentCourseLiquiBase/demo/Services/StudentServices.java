@@ -1,11 +1,10 @@
 package StudentCourseLiquiBase.demo.Services;
 
-import StudentCourseLiquiBase.demo.Dto.CourseDTO;
-import StudentCourseLiquiBase.demo.Dto.StudentCreationDTO;
-import StudentCourseLiquiBase.demo.Dto.StudentDTO;
-import StudentCourseLiquiBase.demo.Dto.StudentUpdateDTO;
+import StudentCourseLiquiBase.demo.Dto.*;
+import StudentCourseLiquiBase.demo.Entity.Address;
 import StudentCourseLiquiBase.demo.Entity.Course;
 import StudentCourseLiquiBase.demo.Entity.Student;
+import StudentCourseLiquiBase.demo.MapStruct.AddressMapper;
 import StudentCourseLiquiBase.demo.MapStruct.CourseMapper;
 import StudentCourseLiquiBase.demo.MapStruct.StudentCreateMapper;
 import StudentCourseLiquiBase.demo.MapStruct.StudentMapper;
@@ -13,10 +12,12 @@ import StudentCourseLiquiBase.demo.Repository.CourseRepository;
 import StudentCourseLiquiBase.demo.Repository.StudentRepository;
 import StudentCourseLiquiBase.demo.exception.CourseExistsException;
 import StudentCourseLiquiBase.demo.exception.ResourceNotFoundException;
+import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,6 +28,8 @@ public class StudentServices {
 
      private StudentMapper studentMapper;
 
+     private AddressMapper addressMapper;
+
      private StudentCreateMapper studentCreateMapper;
 
      private CourseMapper courseMapper;
@@ -35,7 +38,12 @@ public class StudentServices {
          this.studentMapper = studentMapper;
      }
 
-     @Autowired
+    @Autowired
+    public void AddressMapperService(AddressMapper addressMapper){
+        this.addressMapper = addressMapper;
+    }
+
+    @Autowired
      public void CourseMapperService(CourseMapper courseMapper){
          this.courseMapper = courseMapper;
      }
@@ -77,6 +85,16 @@ public class StudentServices {
             Course validcourse = this.courseRepository.findById(cid).orElseThrow(() -> new ResourceNotFoundException("Course not found this UUID ::" + cid));
             student.getCourse().add(validcourse);
         }
+
+        for(Address address : student.getAddressList()){
+            if(address.getId() == null){
+                //  address.setStudent(student);
+            }
+            else{ // throw error here can't update address, can't pass address id
+                throw new CourseExistsException("only able to create new address, can't update address");
+            }
+        }
+
         this.studentRepository.save(student);
         return convertToDTO(student);
     }
@@ -139,6 +157,8 @@ public class StudentServices {
          return student;
 
      }
+
+
      public StudentDTO convertToDTO(Student student){
 
          StudentDTO studentDTO = studentMapper.convertToDTO(student);
@@ -161,4 +181,35 @@ public class StudentServices {
          studentMapper.updateEntity(studentUpdateDTO, student);
     }
 
+    public StudentDTO updateStudentAddress(StudentCreationDTO studentCreationDTO, Integer sid) throws ResourceNotFoundException{
+         Student inputStudent = convertToEntity(studentCreationDTO);
+         Student existingStudent = studentRepository.findById(sid).orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + sid));
+
+         //validate input addressList
+        if(inputStudent.getAddressList() != null) {
+            for (Address inputAddress : inputStudent.getAddressList()) {
+                if(inputAddress.getId() == null)
+                    continue;
+                int val = 0;
+                if (existingStudent.getAddressList() != null) {
+                    for (Address existingAddress : existingStudent.getAddressList()) {
+                        if (existingAddress.getId() == inputAddress.getId()) {
+                            val = 1;
+                        }
+                    }
+                } //
+                if (val == 0) { // not found
+                    throw new CourseExistsException("this address is invalid for update, not exists or not for this student");
+                }
+            }
+        }
+         //
+        this.studentMapper.updateStudentEntity(studentCreationDTO,existingStudent);
+
+
+         // student address map not error may come here
+
+         this.studentRepository.save(existingStudent);
+         return convertToDTO(existingStudent);
+    }
 }

@@ -1,13 +1,18 @@
 package StudentCourseLiquiBase.demo.Entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 
 @Entity
 @Table(name = "students")
-
+@Getter
+@Setter
 public class Student {
 
     @Id
@@ -27,19 +32,20 @@ public class Student {
     @Column(name = "phonenumber",nullable = true, length = 10)
     private String phone;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL) // question
     @JoinTable(name = "students_courses",
         joinColumns = @JoinColumn(name = "sid"),
         inverseJoinColumns = @JoinColumn(name = "cid"))
     private Set<Course> course;
 
-
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "student")
+    private List<Address> addressList;
 
     public Student(){
         super();
     }
 
-    public Student(String firstName, String lastName, String gender, int age, String phone, Set<Course> cource){
+    public Student(String firstName, String lastName, String gender, int age, String phone, Set<Course> cource,  List<Address> addressList){
         super();
         this.firstName = firstName;
         this.lastName = lastName;
@@ -47,51 +53,10 @@ public class Student {
         this.age = age;
         this.phone = phone;
         this.course = cource;
+        this.addressList = addressList;
     }
 
-    public Integer getId(){
-        return this.id;
-    }
-
-    public void setId(Integer id){
-        this.id = id;
-    }
-    //lastname
-    public String getFirstName(){
-        return this.firstName;
-    }
-
-    public void setFirstName(String firstName){
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName){
-        this.lastName = lastName;
-    }
-
-    //firstname
-    public String getLastname(){
-        return this.lastName;
-    }
-
-    //gender
-    public String getGender(){
-        return this.gender;
-    }
-
-    public void setGender(String gender){
-        this.gender = gender;
-    }
-
-    //age
-    public Integer getAge(){
-        return this.age;
-    }
-
-    public void setAge(Integer age){
-        this.age = age;
-    }
-
+    public String getLastname(){return this.lastName;}
 
     //phone number
     public String getPhoneNumber(){
@@ -102,14 +67,12 @@ public class Student {
         this.phone = phoneNumber;
     }
 
-    // course set
-
-    public Set<Course> getCourse(){
-        return this.course;
+    public List<Address> getAddressList(){
+        return this.addressList;
     }
 
-    public void  setCourse(Set<Course> course){
-        this.course = course;
+    public void setAddressList(List<Address> addressList){
+        this.addressList = addressList;
     }
 
 }

@@ -18,7 +18,7 @@ import java.util.Set;
 
 
 @RestController
-@RequestMapping("/students_Courses")
+@RequestMapping("/students-Courses")
 public class CourseController {
 
     @Autowired
@@ -49,7 +49,7 @@ public class CourseController {
 
     }
 
-    @GetMapping("/courses/getstudents/{id}")
+    @GetMapping("/courses/{id}/students")
     public ResponseEntity<Set<Student>> getStudentsByCourseId(@PathVariable(name = "id") Integer id) throws ResourceNotFoundException {
 
         Course course = this.courseRepository.findById(id)
@@ -89,5 +89,17 @@ public class CourseController {
         return  respoce;
     }
 
+    @PutMapping("/courses/{cid}/students/{sid}")
+    public ResponseEntity<Student> RemoveCourseToStudent(@PathVariable(name = "cid") Integer cid, @PathVariable(name = "sid") Integer sid) throws ResourceNotFoundException {
+
+            Course course = this.courseRepository.findById(cid).orElseThrow(() -> new ResourceNotFoundException("Course not found this UUID ::" + cid));
+            Student student = this.studentRepository.findById(sid).orElseThrow(() -> new ResourceNotFoundException("Student not found this UUID ::" + sid));
+            student.getCourse().remove(course);
+            this.studentRepository.save(student);
+
+        return ResponseEntity.ok(this.studentRepository.save(student));
+
+
+    }
 
 }
